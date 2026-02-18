@@ -1,3 +1,4 @@
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
 def home(request):
@@ -5,3 +6,4 @@ def home(request):
 
 def tutorial(request):
     return render(request, 'tutorial.html')
+
