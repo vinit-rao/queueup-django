@@ -20,25 +20,36 @@
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="/about">About <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="{% url 'posts:list' %}">Explore <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Create <span class="sr-only">(current)</span></a>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
+  <div class="collapse navbar-collapse" id="navbarText">
+      <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/" title="Home">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/about" title="About">About <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'posts:list' %}" title="Explore">Explore <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'posts:new-post' %}" title="Create">Create <span class="sr-only">(current)</span></a>
+          </li>
+      </ul>
+      <ul class="navbar-nav">
+          {% if user.is_authenticated %}
+          <form class="logout" action="{% url 'users:logout' %}" method="post">
+              {% csrf_token %}
+              <button class="logout-button" aria-label="Logout" title="Logout">Logout</button>
+          </form>
+          {% else %}
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'users:login' %}" title="Login">Login <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'users:register' %}" title="Register">Register <span class="sr-only">(current)</span></a>
+              </li>
+          {% endif %}
+      </ul>
   </div>
 </nav>
   <main>
