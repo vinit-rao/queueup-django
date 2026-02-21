@@ -55,7 +55,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'gamehotspot'
+    'queueup',
+    'users'
 ]
 
 MIDDLEWARE = [

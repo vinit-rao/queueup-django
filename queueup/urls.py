@@ -1,5 +1,5 @@
 from django.urls import path
-from gamehotspot import views
+from queueup import views
 
 app_name = 'posts'
 

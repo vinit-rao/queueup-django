@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('gamehotspot', '0001_initial'),
+        ('queueup', '0001_initial'),
     ]
 
     operations = [
