@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class GamehotspotConfig(AppConfig):
+class QueueupConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'gamehotspot'
+    name = 'queueup'
