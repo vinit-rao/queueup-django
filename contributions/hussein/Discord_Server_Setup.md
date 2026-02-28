@@ -10,10 +10,12 @@ This Discord server was created to facilitate team communication and collaborati
 ## Setup Details
 - Server customization interface accessed
 - Server name configured as "big team"
-- Ready for channel setup and team member invitations
+- Channels created for project organization
+- Team members invited
+- Roles and permissions configured
+- Notification settings set up
 
-## Next Steps
-1. Create relevant channels for project organization
-2. Invite team members
-3. Set up roles and permissions
-4. Configure notification settings
+## Proof of Completion
+![Discord Server Setup Screenshot](discord_server_setup.png)
+
+The screenshot above shows the Discord server "big team" successfully created and configured for team collaboration.
