@@ -4,6 +4,9 @@ from . models import Post
 from django.contrib.auth.decorators import login_required
 from . import forms
 
+#Diako Search Feature
+from django.db.models import Q
+
 def home(request):
     return render(request, 'home.html')
 
@@ -14,8 +17,20 @@ def about(request):
     return render(request, 'about.html')
 
 def posts_list(request):
+    query = request.GET.get('q')
+
     posts = Post.objects.all()
-    return render(request, 'posts/posts_list.html', {'posts':posts})
+
+    if query:
+        posts = posts.filter(
+            Q(title__icontains=query) |
+            Q(author__username__icontains=query)
+        )
+
+    return render(request, 'posts/posts_list.html', {
+        'posts': posts,
+        'query': query
+    })
 
 def post_page(request, slug):
     post= Post.objects.get(slug=slug)

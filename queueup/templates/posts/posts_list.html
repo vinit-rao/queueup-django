@@ -1,8 +1,20 @@
 {% extends 'layout.html' %}
+
 {% block title %}Posts - GameSpot{% endblock %}
 {% block content %}
     <section>
     <h1>Posts</h1>
+
+    {#Diako Search feature#}
+    <form method="GET" action="{% url 'posts:list' %}">
+        <input type="text" name="q" placeholder="Search lobbies or users">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if query %}
+        <p>Showing results for "{{ query }}"</p>
+    {% endif %}
+
     {% for post in posts %}
         <article class="post">
             <h2>
