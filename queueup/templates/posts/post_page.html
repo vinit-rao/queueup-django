@@ -6,12 +6,15 @@
 
 {% block content %}
     <section>
-        <img class="banner"
-             src="{{ post.banner.url }}"
-             alt="{{ post.title }}"
-        >
+        <img class="banner" src="{{ post.banner.url }}" alt="{{ post.title }}">
         <h1>{{ post.title }}</h1>
         <p>{{ post.date }}</p>
         <p>{{ post.body }}</p>
+
+        <div class="mt-4">
+            <a href="{% url 'posts:lobby' lobby_name=post.slug %}" class="btn" style="background-color: #44B78B; color: white;">
+                Join Lobby
+            </a>
+        </div>
     </section>
 {% endblock %}
