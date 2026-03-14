@@ -1,5 +1,5 @@
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from . models import Post
 from django.contrib.auth.decorators import login_required
 from . import forms
@@ -33,3 +33,14 @@ def post_new(request):
     else:
         form = forms.CreatePost()
     return render(request, 'posts/post_new.html', {'form': form})
+
+
+@login_required(login_url='/users/login/')
+def lobby_view(request, lobby_name):
+    post = get_object_or_404(Post, slug=lobby_name)
+    messages = post.messages.all()[:50]
+    return render(request, 'queueup/lobby.html', {
+        'post': post,
+        'lobby_name': lobby_name,
+        'messages': messages
+    })

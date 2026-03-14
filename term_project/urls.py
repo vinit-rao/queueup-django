@@ -10,6 +10,7 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('posts/', include('queueup.urls')),
     path('users/', include('users.urls')),
+    path('queueup/', include('queueup.urls')),
 ]
 
 if settings.DEBUG:

@@ -47,6 +47,7 @@ DEBUG = True
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -56,7 +57,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'queueup',
-    'users'
+    'users',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -98,8 +100,15 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'term_project.wsgi.application'
+#WSGI_APPLICATION = 'term_project.wsgi.application'
 
+ASGI_APPLICATION = 'term_project.asgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -136,7 +145,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Toronto'
 
 USE_I18N = True
 
