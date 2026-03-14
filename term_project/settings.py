@@ -37,7 +37,7 @@ def env_list(name: str, default=None, sep=","):
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 DEBUG = env_bool("DJANGO_DEBUG", default=False)
-ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", default=(["*"] if DEBUG else []))
+ALLOWED_HOSTS = ['queueup-bigteam.onrender.com', 'localhost', '127.0.0.1']
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
