@@ -110,3 +110,11 @@ a:hover {
 .logout-button:hover {
     opacity: .85;
 }
+
+.modal-title {
+    color: black !important;
+}
+
+.modal-body {
+    color: black !important;
+}
