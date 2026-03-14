@@ -39,7 +39,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 DEBUG = env_bool("DJANGO_DEBUG", default=False)
 ALLOWED_HOSTS = ['queueup-bigteam.onrender.com', 'localhost', '127.0.0.1']
 
-
+CSRF_TRUSTED_ORIGINS = ['https://queueup-bigteam.onrender.com']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
