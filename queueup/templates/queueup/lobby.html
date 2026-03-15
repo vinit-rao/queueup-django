@@ -34,12 +34,15 @@
 {{ lobby_name|json_script:"lobby-name" }}
 
 <script>
-    // Grab the lobby name from the JSON script block above
+    // get the lobby name from the JSON script block above
     const lobbyName = JSON.parse(document.getElementById('lobby-name').textContent);
 
-    // Initialize the WebSocket connection
+    // check if the site is secure (https) or local (http)
+    const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+
+    // build the connection URL
     const chatSocket = new WebSocket(
-        'ws://' + window.location.host + '/ws/chat/' + lobbyName + '/'
+        wsScheme + '://' + window.location.host + '/ws/chat/' + lobbyName + '/'
     );
 
 chatSocket.onmessage = function(e) {

@@ -118,3 +118,16 @@ a:hover {
 .modal-body {
     color: black !important;
 }
+
+.modal-content {
+    background-color: white !important;
+    color: black !important;
+}
+
+.modal-title {
+    color: black !important;
+}
+
+.modal-body {
+    color: black !important;
+}
