@@ -111,11 +111,23 @@ a:hover {
     opacity: .85;
 }
 
-footer {
-    padding: 1rem;
-    background-color: #44B78B;
-    color: white;
-    font-size: 1rem;
-    text-align: center;
-    margin-top: auto;
+.modal-title {
+    color: black !important;
+}
+
+.modal-body {
+    color: black !important;
+}
+
+.modal-content {
+    background-color: white !important;
+    color: black !important;
+}
+
+.modal-title {
+    color: black !important;
+}
+
+.modal-body {
+    color: black !important;
 }
