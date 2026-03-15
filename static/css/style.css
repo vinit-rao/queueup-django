@@ -110,3 +110,12 @@ a:hover {
 .logout-button:hover {
     opacity: .85;
 }
+
+footer {
+    padding: 1rem;
+    background-color: #44B78B;
+    color: white;
+    font-size: 1rem;
+    text-align: center;
+    margin-top: auto;
+}

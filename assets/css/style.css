@@ -9,6 +9,8 @@ body {
     background-color: black;
     color: whitesmoke;
     font-size: 3rem;
+    display: flex;
+    flex-direction: column;
 }
 
 nav {
@@ -110,3 +112,4 @@ a:hover {
 .logout-button:hover {
     opacity: .85;
 }
+
