@@ -5,16 +5,34 @@
 {% endblock %}
 
 {% block content %}
-    <section>
-        <img class="banner" src="{{ post.banner.url }}" alt="{{ post.title }}">
-        <h1>{{ post.title }}</h1>
-        <p>{{ post.date }}</p>
-        <p>{{ post.body }}</p>
+    <section class="post-details">
+        {% if post.banner_url %}
+            <div class="game-banner-container">
+                <img class="game-banner" src="{{ post.banner_url }}" alt="{{ post.game_name }}">
+                <div class="banner-overlay"></div>
+            </div>
+        {% else %}
+            <img class="banner" src="{{ post.banner.url }}" alt="{{ post.title }}">
+        {% endif %}
 
-        <div class="mt-4">
-            <a href="{% url 'posts:lobby' lobby_name=post.slug %}" class="btn" style="background-color: #44B78B; color: white;">
-                Join Lobby
-            </a>
+        <div class="post-content-wrapper">
+            <div class="post-header-info">
+                <h1>{{ post.title }}</h1>
+                {% if post.game_name %}
+                    <p class="game-tag">{{ post.game_name }}</p>
+                {% endif %}
+                <small class="text-muted">Posted on {{ post.date|date:"F j, Y" }}</small>
+            </div>
+
+            <div class="post-body">
+                <p>{{ post.body }}</p>
+            </div>
+
+            <div class="post-actions">
+                <a href="{% url 'posts:lobby' lobby_name=post.slug %}" class="btn-join">
+                    Join Live Lobby
+                </a>
+            </div>
         </div>
     </section>
 {% endblock %}

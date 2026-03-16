@@ -1,30 +1,44 @@
 {% extends 'layout.html' %}
 
-{% block title %}Posts - QueueUp{% endblock %}
+{% block title %}Lobbies - QueueUp{% endblock %}
+
 {% block content %}
-    <section>
-    <h1>Posts</h1>
+<section>
+    <div class="list-header">
+    <h1>Active Lobbies</h1>
 
-    {#Diako Search feature#}
-    <form method="GET" action="{% url 'posts:list' %}">
-        <input type="text" name="q" placeholder="Search lobbies or users">
-        <button type="submit">Search</button>
-    </form>
+    <div class="search-container">
+        <form class="search-form" action="{% url 'posts:list' %}" method="get">
+            <input type="text" name="q" placeholder="Search..." value="{{ query|default:'' }}">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+</div>
 
-    {% if query %}
-        <p>Showing results for "{{ query }}"</p>
-    {% endif %}
+    <div class="posts-grid">
+        {% for post in posts %}
+            <a href="{% url 'posts:page' slug=post.slug %}" class="post-card">
+                {% if post.cover_url %}
+                    <img src="{{ post.cover_url }}" alt="{{ post.game_name }}" class="game-cover">
+                {% else %}
+                    <div class="placeholder-cover">No Cover Art</div>
+                {% endif %}
 
-    {% for post in posts %}
-        <article class="post">
-            <h2>
-                <a href="{% url 'posts:page' slug=post.slug %}">
-                    {{ post.title }}
-                </a>
-            </h2>
-            <p>{{ post.date }} by {{ post.author }}</p>
-{#            <p>{{ post.body }}</p>#}
-        </article>
-    {% endfor %}
-    </section>
+                <div class="post-overlay">
+                    <div class="post-text">
+                        <h2>{{ post.title }}</h2>
+                        {% if post.game_name %}
+                            <p>{{ post.game_name }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+        {% empty %}
+            <div style="grid-column: 1/-1; text-align: left;">
+                <p>No active lobbies found matching your search.</p>
+                <a href="{% url 'posts:list' %}">Clear search</a>
+            </div>
+        {% endfor %}
+    </div>
+</section>
 {% endblock %}

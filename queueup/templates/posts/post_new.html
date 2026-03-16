@@ -1,16 +1,91 @@
 {% extends 'layout.html' %}
 
-{% block title %}
-    Create - QueueUp
-{% endblock %}
+{% block title %}Create - QueueUp{% endblock %}
 
 {% block content %}
     <section>
         <h1>Create Post</h1>
         <form class="form-with-validation" action="{% url 'posts:new-post' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form }}
+
+            <div class="autocomplete-container" id="form-container">
+                {{ form }}
+            </div>
+
             <button class="form-submit">Submit</button>
         </form>
     </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // get dom elements
+            const gameInput = document.getElementById('id_game_name');
+            const container = document.getElementById('form-container');
+
+            // init dropdown ui
+            const resultList = document.createElement('ul');
+            resultList.classList.add('autocomplete-results');
+            resultList.style.display = 'none';
+            container.appendChild(resultList);
+
+            // watch input keystrokes
+            gameInput.addEventListener('input', function() {
+                const query = gameInput.value.trim();
+
+                // hide menu if query is too short
+                if (query.length < 2) {
+                    resultList.style.display = 'none';
+                    return;
+                }
+
+                // fetch igdb suggestions
+                fetch(`{% url 'posts:api-game-search' %}?q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        resultList.innerHTML = '';
+
+                        if (data.results.length > 0) {
+                            data.results.forEach(game => {
+                                const li = document.createElement('li');
+
+                                // render cover or placeholder
+                                if (game.icon_url) {
+                                    const img = document.createElement('img');
+                                    img.src = game.icon_url;
+                                    img.className = 'autocomplete-icon';
+                                    li.appendChild(img);
+                                } else {
+                                    const placeholder = document.createElement('div');
+                                    placeholder.className = 'autocomplete-icon placeholder-icon';
+                                    li.appendChild(placeholder);
+                                }
+
+                                // render text
+                                const textSpan = document.createElement('span');
+                                textSpan.textContent = game.name;
+                                li.appendChild(textSpan);
+
+                                // handle selection
+                                li.addEventListener('click', function() {
+                                    gameInput.value = game.name;
+                                    resultList.style.display = 'none';
+                                });
+
+                                resultList.appendChild(li);
+                            });
+                            resultList.style.display = 'block';
+                        } else {
+                            resultList.style.display = 'none';
+                        }
+                    });
+            });
+
+            // close menu on outside click
+            document.addEventListener('click', function(e) {
+                if (e.target !== gameInput) {
+                    resultList.style.display = 'none';
+                }
+            });
+        });
+    </script>
 {% endblock %}
