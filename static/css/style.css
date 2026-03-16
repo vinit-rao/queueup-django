@@ -20,6 +20,7 @@ nav {
 
 main {
     padding: 1rem;
+    padding-bottom: 350px; /* Kept only this fix to stop the dropdown from breaking the scroll */
 }
 
 section {
@@ -96,7 +97,6 @@ a:hover {
     content: '🚨 ';
 }
 
-
 .logout {
     display: inline-block;
 }
@@ -124,10 +124,167 @@ a:hover {
     color: black !important;
 }
 
-.modal-title {
-    color: black !important;
+
+/* =========================================
+   FUNCTIONAL ADDITIONS FOR NEW HTML
+   (Grid, Search, Dropdown, Chat, Banner)
+   ========================================= */
+
+/* --- Fix for massive Django Textarea --- */
+#id_game_name {
+    height: 35px !important;
+    min-height: 35px !important;
+    resize: none;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
-.modal-body {
-    color: black !important;
+/* --- List Page Header & Search --- */
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.search-form {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.search-form input {
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+.search-form button {
+    background-color: #44B78B;
+    border: none;
+    color: white;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+/* --- Structural Grid for Post Cards --- */
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.post-card {
+    position: relative;
+    height: 300px;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    overflow: hidden;
+}
+
+.game-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.placeholder-cover {
+    width: 100%;
+    height: 100%;
+    background-color: #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.post-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1rem;
+}
+
+.post-text h2 { font-size: 1.2rem; margin: 0; }
+.post-text p { font-size: 0.9rem; color: #44B78B; margin: 0; }
+
+/* --- Post Page Hero Banner --- */
+.game-banner-container {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.game-banner {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.banner-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.8) 100%);
+}
+
+.btn-join {
+    display: inline-block;
+    background-color: #44B78B;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+}
+
+/* --- IGDB Autocomplete Dropdown --- */
+.autocomplete-container {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+}
+
+.autocomplete-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #1a1a1a;
+    border: 1px solid #44B78B;
+    z-index: 1000;
+    list-style: none;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.autocomplete-results li {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+}
+
+.autocomplete-results li:hover { background-color: #333; }
+
+.autocomplete-icon {
+    width: 35px;
+    height: 45px;
+    object-fit: cover;
+}
+
+/* --- Lobby Chat --- */
+#chat-log {
+    height: 400px;
+    overflow-y: auto;
+    background: #111;
+    padding: 1rem;
+    border: 1px solid #333;
 }
