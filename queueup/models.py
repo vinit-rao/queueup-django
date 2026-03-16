@@ -8,6 +8,9 @@ class Post(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     banner = models.ImageField(default='fm5.jpg', blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    game_name = models.TextField(max_length=200, blank=True, null=True)
+    banner_url = models.URLField(max_length=500, blank=True, null=True)
+    cover_url = models.URLField(max_length=500, blank=True, null=True)
 
     def __str__(self):
         return self.title
