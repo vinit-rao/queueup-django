@@ -41,9 +41,7 @@
           </form>
           {% else %}
               <li class="nav-item active">
-                <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal" title="Login">
-                    Login
-                </a>
+                <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal" title="Login">Login</a>
               </li>
               <li class="nav-item active">
                 <a class="nav-link" href="{% url 'users:register' %}" title="Register">Register <span class="sr-only">(current)</span></a>
@@ -124,13 +122,14 @@
           <div class="form-group">
             <input type="password" name="password" class="form-control" placeholder="Password">
           </div>
-
-          <button type="submit" class="btn btn-primary">Login</button>
+{# Edited CSS #}
+          <button type="submit" class="button-thingy" style="font-size: 20px;">Login</button>
         </form>
 
         <hr>
         <p>Don't have an account?</p>
-        <a href="{% url 'users:register' %}">Register</a>
+{#          Edited CSS #}
+        <a href="{% url 'users:register' %}" class="button-thingy" style="font-size: 20px;">Register</a>
       </div>
 
     </div>

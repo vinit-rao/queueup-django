@@ -153,7 +153,7 @@ a:hover {
 }
 
 .search-form button {
-    background-color: #44B78B;
+    background-color: #7e77e4;
     border: none;
     color: white;
     padding: 0.5rem 1rem;
@@ -205,7 +205,7 @@ a:hover {
 }
 
 .post-text h2 { font-size: 1.2rem; margin: 0; }
-.post-text p { font-size: 0.9rem; color: #44B78B; margin: 0; }
+.post-text p { font-size: 0.9rem; color: #7e77e4; margin: 0; }
 
 /* --- Post Page Hero Banner --- */
 .game-banner-container {
@@ -230,7 +230,7 @@ a:hover {
 
 .btn-join {
     display: inline-block;
-    background-color: #44B78B;
+    background-color: #7e77e4;
     color: white;
     padding: 0.8rem 1.5rem;
     font-size: 1rem;
@@ -249,7 +249,7 @@ a:hover {
     left: 0;
     width: 100%;
     background-color: #1a1a1a;
-    border: 1px solid #44B78B;
+    border: 1px solid #7e77e4;
     z-index: 1000;
     list-style: none;
     max-height: 250px;
@@ -275,11 +275,14 @@ a:hover {
 }
 
 .button-thingy {
-    border-radius: 20px;
-    border: 4px solid #24232B;
-    background: #333441;
+    border-radius: 0.5em;
+    /*border: 0px solid #24232B;*/
+    /*margin: 5px;*/
     text-align: center;
-    color: #2C2936;
+    padding: 5px 1em;
+    background: #7e77e4;
+    width: 6em;
+    color: #ffffff;
 }
 
 /* --- Lobby Chat --- */
