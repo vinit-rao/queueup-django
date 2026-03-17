@@ -27,12 +27,22 @@
                 <div class="post-overlay">
                     <div class="post-text" style="color: #CAC8EA">
                         <h2>{{ post.title }}</h2>
+
                         {% if post.game_name %}
                             <p style="color: #9996C0">{{ post.game_name }}</p>
                         {% endif %}
+
+                        {% if post.tags %}
+                            <div class="tags">
+                                {% for tag in post.get_tags_list %}
+                                    <span class="tag">{{ tag }}</span>
+                                {% endfor %}
+                            </div>
+                    {% endif %}
                     </div>
                 </div>
             </a>
+
         {% empty %}
             <div style="grid-column: 1/-1; text-align: left;">
                 <p>No active lobbies found matching your search.</p>

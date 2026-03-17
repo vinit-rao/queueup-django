@@ -10,9 +10,15 @@ class Post(models.Model):
     game_name = models.TextField(max_length=200, blank=True, null=True)
     banner_url = models.URLField(max_length=500, blank=True, null=True)
     cover_url = models.URLField(max_length=500, blank=True, null=True)
+    tags = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return self.title
+
+    def get_tags_list(self):
+        if self.tags:
+            return [tag.strip() for tag in self.tags.split(',')]
+        return []
 
 
 class JoinRequest(models.Model):
