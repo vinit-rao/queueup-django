@@ -1,0 +1,151 @@
+
+/* THE BUILDING BLOCKS */
+
+.grid{
+    display: grid;
+}
+
+.cover{
+    height: 100vh;
+}
+
+.container-test {
+    background-color: salmon;
+    object-fit: cover;
+}
+
+.auto-margin{
+    margin-left: auto;
+    margin-right: auto;
+}
+.viewport-margin{
+    margin-left: 50vw;
+    margin-right: 50vw;
+}
+.percent-margin{
+    margin-left: 50%;
+    margin-right: 50%;
+}
+.vertical-space{
+    margin-bottom: 40px;
+    margin-top: 40px;
+}
+
+.max-width{
+max-width: 1000px;
+}
+
+.box {
+    width: 50px;
+    height: 50px;
+    background-color: rgb(35, 54, 162);
+    border: 2px solid rgb(255, 255, 255);
+    border-radius: 5px;
+}
+
+/* ALIGNMENT */
+
+/* CENTER */
+.center-container{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.justify-self-center{ /* DONT USE */
+    justify-self: center;
+}
+
+.center-content{
+    justify-items: center; /* apparently only this one works */
+}
+
+.center-content-middle{
+    justify-content: center;
+    align-content: center;
+    justify-items: center; /* apparently only this one works */
+}
+
+.center-items{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid black;
+    font-size: 3em;
+}
+
+/* LEFT */
+.left-content{
+    justify-content: start;
+    align-content: start;
+    justify-items: start; /* apparently only this one works */
+}
+
+.left-container{
+margin-left: auto;
+}
+
+/* RIGHT */
+.right-content{
+    justify-content: end;
+    align-content: end;
+    justify-items: end; /* apparently only this one works */
+}
+
+.right-container{
+margin-right: auto;
+}
+
+
+
+.two-column {
+    grid-template-columns: 1fr 1fr;
+    /* background-color: rgb(9, 67, 48); */
+}
+
+.justify-content-center{
+    justify-content: center;
+}
+
+.margin{
+    margin: auto;
+}
+
+.span-2 {
+    grid-column: span 2;
+}
+
+.sidebar-layout-areas {
+    grid-template: 100px 1fr auto / 150px 1fr;
+    grid-template-areas: 
+        "header header"
+        "sidebar main"
+        "footer footer";
+}
+
+.align-content-center {
+    align-content: center;
+}
+
+@media screen and (max-width: 1350px) {
+    .container {
+        margin-bottom: 40px;
+    }
+
+    .max-width{
+        margin:100px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        margin: auto;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .container {
+        margin-bottom: 40px;
+    }
+
+    .max-width{
+        margin-left: auto;
+        margin-right: auto;
+    }
+}

@@ -1,0 +1,125 @@
+/* this is various css statements to make flex boxes */
+  .flex-container {
+
+    display: flex;
+    
+    justify-content: space-around; 
+    align-items: center; 
+    /* flex-flow: row wrap; */ 
+    flex-direction: row; 
+    flex-wrap: wrap; 
+
+    /* background-color: #bbdefb; */
+    /* height: 100%; */
+    padding: 15px;
+    gap: 5px;
+
+  }
+
+  .row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    transition: display 2s;
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    /* flex-basis: 100%;
+    flex: 1; */
+  }
+
+  .grow{
+    flex-grow: 2;
+  }
+
+  .shrink{
+    flex-shrink: 2;
+  }
+
+  .flex-center{
+    justify-content: center;
+    align-items: center;
+  }
+
+  .flex-middle{
+    justify-content: center;
+  }
+
+  .flex-top{
+    top: 0;
+  }
+
+  .flex-ends{
+    justify-content: space-between; 
+  }
+  .flex-box{
+    position: relative;
+    z-index: 5;
+      /*
+      background-color: rgb(255, 255, 255);
+    box-shadow: 0 0 10px 20px rgb(255, 255, 255);
+    */
+  }
+
+  .prysm-adj1{
+    max-width: 160vmin;
+  }
+
+  .flex-space{
+     gap: 50px;
+  }
+
+  .flex-space-small{
+    padding: 55px; gap: 25px;
+  }
+
+  .flex-space-cards{
+     gap: 70px;
+  }
+
+  .flex-box-padding{
+    padding-left: 50px; padding-right: 50px;
+  }
+
+  .flex-space-galaxy{
+    padding: 50px; gap: 30px;
+  }
+
+  .galaxy-adj-1{
+    width: 30vw;
+  }
+  .galaxy-adj-2{
+    width: 40%;
+  }
+  .galaxy-adj-3{
+    margin: auto;
+  }
+  .galaxy-adj-4{
+    width: 40vw;
+  }
+
+  @media screen and (max-width: 1200px) {
+    .galaxy-adj-1{
+      width: 45vw;
+    }
+    .galaxy-adj-2{
+      width: 350px;
+    }
+    .galaxy-adj-4{
+      width: 60vw;
+    }
+  }
+
+@media screen and (max-width: 985px) {
+/* 875px */
+  .flex-ends{
+    justify-content: center; 
+  }
+  }
+
+  @media screen and (max-width: 650px) {
+
+    }

@@ -36,7 +36,7 @@
         {% empty %}
             <div style="grid-column: 1/-1; text-align: left;">
                 <p>No active lobbies found matching your search.</p>
-                <a href="{% url 'posts:list' %}">Clear search</a>
+                <a href="{% url 'posts:list' %}" class="button-thingy">Clear search</a>
             </div>
         {% endfor %}
     </div>

@@ -1,0 +1,24 @@
+footer {
+    bottom: 0px;
+    position: relative;
+    margin-top: 0px;
+    text-align: center;
+    padding: 20px;
+    background-color:  #ffffff;
+    border-top: 3px solid #c4c4c4;
+    bottom: 0px;
+    /* position: sticky; */
+}
+
+footer a {
+    background-size: 130%;
+    background-position: 50%;
+    opacity: 100%;
+    background-image: linear-gradient(to right, rgb(238, 0, 255), rgb(128, 0, 255));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+footer a:hover {
+
+}
