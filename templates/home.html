@@ -1,5 +1,36 @@
 {% extends 'layout.html' %}
-{% block title %}Welcome - QueueUp{% endblock %}
+
+{% block title %}
+    Home - QueueUp
+{% endblock %}
+
 {% block content %}
-    <h1>Home Page extends the layout</h1>
+    <h1 style="font-size: 2rem;">Welcome to QueueUp</h1>
+
+
+<section style="margin-top: 1rem;">
+    <h2 style="font-size: 1.5rem; margin-bottom: 0.3rem;">Featured</h2>
+
+    <div style="display: flex; gap: 1rem; margin-top: 0;">
+
+        <div style="background-color: #111; padding: 1rem; border-radius: 10px; flex: 1; border: 1px solid #44B78B;">
+            <h3 style="font-size: 1.2rem;">Latest Post</h3>
+            <p style="font-size: 0.9rem;">Explore games and discover new ones to play. </p>
+            <a href="{% url 'posts:list' %}" style="font-size: 0.9rem;">Explore Posts</a>
+        </div>
+
+        <div style="background-color: #111; padding: 1rem; border-radius: 10px; flex: 1; border: 1px solid #44B78B;">
+            <h3 style="font-size: 1.2rem;">Trending Games</h3>
+            <p style="font-size: 0.9rem;">See what games people are playing right now.</p>
+            <a href="{% url 'posts:list' %}" style="font-size: 0.9rem;">View Trends</a>
+        </div>
+
+        <div style="background-color: #111; padding: 1rem; border-radius: 10px; flex: 1; border: 1px solid #44B78B;">
+            <h3 style="font-size: 1.2rem;">Create Your Own</h3>
+            <p style="font-size: 0.9rem;">Create your own room for others to join and play.</p>
+            <a href="{% url 'posts:new-post' %}" style="font-size: 0.9rem;">Create Post</a>
+        </div>
+
+    </div>
+</section>
 {% endblock %}
