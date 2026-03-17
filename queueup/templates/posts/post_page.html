@@ -34,5 +34,30 @@
                 </a>
             </div>
         </div>
+    <hr>
+        <div class="application-section">
+            {% if user.is_authenticated %}
+
+                {% if user == post.author %}
+                    <p><strong>You are the host of this lobby.</strong></p>
+
+                {% elif has_applied %}
+                    <div class="alert alert-info" style="background-color: #369672; color: white; padding: 10px; border-radius: 5px;">
+                        Your request to join is currently <strong>Pending</strong>.
+                    </div>
+
+                {% else %}
+                    <h3>Request to Join</h3>
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Send Request</button>
+                    </form>
+                {% endif %}
+
+            {% else %}
+                <p><a href="{% url 'users:login' %}">Log in</a> to request to join this lobby.</p>
+            {% endif %}
+        </div>
     </section>
 {% endblock %}

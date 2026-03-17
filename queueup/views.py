@@ -5,7 +5,7 @@ from django.utils.text import slugify
 from .igdb import fetch_game_data, get_game_suggestions
 
 from .forms import CreatePost
-from .models import Post
+from .models import Post, JoinRequest
 from django.contrib.auth.decorators import login_required
 from . import forms
 from django.db.models import Q
@@ -38,9 +38,31 @@ def posts_list(request):
         'query': query
     })
 
+
 def post_page(request, slug):
-    post= Post.objects.get(slug=slug)
-    return render(request, 'posts/post_page.html', {'post': post})
+    post = get_object_or_404(Post, slug=slug)
+    has_applied = False
+    if request.user.is_authenticated:
+        has_applied = JoinRequest.objects.filter(post=post, applicant=request.user).exists()
+
+    if request.method == 'POST':
+        form = forms.JoinRequestForm(request.POST)
+
+        if form.is_valid() and not has_applied and request.user != post.author:
+            join_request = form.save(commit=False)
+            join_request.post = post
+            join_request.applicant = request.user
+            join_request.save()
+
+            return redirect(request.path_info)
+    else:
+        form = forms.JoinRequestForm()
+
+    return render(request, 'posts/post_page.html', {
+        'post': post,
+        'form': form,
+        'has_applied': has_applied
+    })
 
 @login_required(login_url='/users/login/')
 def post_new(request):
@@ -81,7 +103,6 @@ def lobby_view(request, lobby_name):
         'lobby_name': lobby_name,
         'messages': messages
     })
-
 
 def api_search_games(request):
     query = request.GET.get('q', '')
