@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+
+{% block title %}Manage Lobby - {{ post.title }}{% endblock %}
+
+{% block content %}
+    <h1>Manage Applications: {{ post.title }}</h1>
+    <p><a href="{% url 'posts:my-posts' %}">&larr; Back to My Posts</a></p>
+    <hr>
+
+    {% if applications %}
+        <div class="applications-list">
+            {% for app in applications %}
+                <div id="request-card-{{ app.id }}" class="card mb-3" style="padding: 20px; border: 1px solid #44B78B; border-radius: 8px; background-color: #1a1a1a; margin-bottom: 20px; transition: opacity 0.3s ease;">
+                    <h3>Applicant: {{ app.applicant.username }}</h3>
+                    <p style="font-size: 1.1em;"><strong>Message:</strong> "{{ app.message }}"</p>
+
+                    <div class="actions" style="margin-top: 15px;">
+                        <button onclick="handleRequest({{ app.id }}, 'accept')" class="btn btn-success" style="background-color: #44B78B; border: none; padding: 10px 20px; color: white; border-radius: 5px; margin-right: 10px; cursor: pointer;">Accept</button>
+
+                        <button onclick="handleRequest({{ app.id }}, 'reject')" class="btn btn-danger" style="background-color: #dc3545; border: none; padding: 10px 20px; color: white; border-radius: 5px; cursor: pointer;">Reject</button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p id="empty-message">You have no pending applications right now. Check back later!</p>
+    {% endif %}
+
+    <script>
+        function handleRequest(requestId, action) {
+            const url = `/posts/request/${requestId}/${action}/`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const card = document.getElementById(`request-card-${requestId}`);
+                        card.style.opacity = '0';
+                        setTimeout(() => {
+                            card.remove();
+                            const list = document.querySelector('.applications-list');
+                            if (list && list.children.length === 0) {
+                                list.innerHTML = "<p>You have caught up on all applications!</p>";
+                            }
+                        }, 300);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+{% endblock %}

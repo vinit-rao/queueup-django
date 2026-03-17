@@ -3,98 +3,145 @@
 {% block title %}Chat: {{ post.title }}{% endblock %}
 
 {% block content %}
+    <style>
+    /* Scoped Chat Styles */
+    #chat-log div {
+        font-size: 0.95rem; /* Standard readable size */
+        line-height: 1.4;
+        margin-bottom: 8px;
+    }
+
+    #chat-log strong {
+        font-size: 1rem;
+        font-weight: 700;
+        /* This prevents your global CSS from making names massive */
+    }
+
+    #chat-log .text-muted {
+        font-size: 0.75rem !important;
+        margin-right: 8px;
+    }
+
+    /* Fix for the Sidebar names too */
+    #active-user-list span {
+        font-size: 0.9rem !important;
+    }
+</style>
 <div class="lobby-container"
     {% if post.banner_url %}
-    style="background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)), url('{{ post.banner_url }}');"
+    style="background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.95)), url('{{ post.banner_url }}'); min-height: 90vh; background-size: cover; background-position: center;"
     {% endif %}>
 
-    <div class="container">
+    <div class="container py-4">
         <div class="row">
-            <div class="col-md-8 offset-md-2">
-
-                <h2>Live Chat: {{ post.title }}</h2>
+            <div class="col-md-9">
+                <h2 class="text-white">Live Chat: {{ post.title }}</h2>
                 {% if post.game_name %}
-                    <p style="color: #81dbb8; font-size: 1.2rem;">Currently playing: {{ post.game_name }}</p>
+                    <p style="color: #7377e4; font-size: 1.1rem; font-weight: 500;">Playing: {{ post.game_name }}</p>
                 {% endif %}
 
-                <div class="card mb-3" style="border: 1px solid #44B78B;">
-                    <div class="card-body" id="chat-log" style="height: 400px; overflow-y: auto; background-color: rgba(26, 26, 26, 0.8); color: whitesmoke;">
+                <div class="card mb-3" style="border: 1px solid #7377e4; background-color: rgba(26, 26, 26, 0.9);">
+                    <div class="card-body" id="chat-log" style="height: 500px; overflow-y: auto; color: whitesmoke; padding: 20px;">
                         {% for msg in messages %}
-                            <p>
-                                <small class="text-muted">[{{ msg.timestamp|date:"g:i A" }}]</small>
-                                <strong>{{ msg.user.username }}:</strong> {{ msg.content }}
-                            </p>
+                            <div class="mb-2">
+                                <small class="text-muted" style="font-size: 0.75rem;">[{{ msg.timestamp|date:"g:i A" }}]</small>
+                                <strong style="color: #7377e4;">{{ msg.user.username }}:</strong>
+                                <span style="color: #eee;">{{ msg.content }}</span>
+                            </div>
                         {% endfor %}
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <input id="chat-message-input" type="text" class="form-control" placeholder="Type your message here..." autocomplete="off">
+                    <input id="chat-message-input" type="text" class="form-control" style="background: #222; border: 1px solid #7377E4; color: white;" placeholder="Message the lobby..." autocomplete="off">
                     <div class="input-group-append">
-                        <button id="chat-message-submit" class="btn" style="background-color: #44B78B; color: white;" type="button">Send</button>
+                        <button id="chat-message-submit" class="btn" style="background-color: #7377e4; color: white; font-weight: bold; width: 80px;" type="button">Send</button>
                     </div>
                 </div>
+            </div>
 
+            <div class="col-md-3">
+                <div class="card" style="border: 1px solid #7377E4; background-color: rgba(20, 20, 20, 0.9); height: 100%; min-height: 500px;">
+                    <div class="card-header" style="border-bottom: 1px solid #333; background: transparent;">
+                        <h5 class="text-white mb-0" style="font-size: 1rem;">Active Now</h5>
+                    </div>
+                    <div class="card-body" id="active-user-list" style="padding: 15px;">
+                        <div class="text-muted small">Loading players...</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 {{ lobby_name|json_script:"lobby-name" }}
-<script>
-    // parse lobby name
-    const lobbyName = JSON.parse(document.getElementById('lobby-name').textContent);
 
-    // detect environment protocol
+<script>
+    const lobbyName = JSON.parse(document.getElementById('lobby-name').textContent);
     const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
 
-    // init websocket
     const chatSocket = new WebSocket(
         wsScheme + '://' + window.location.host + '/ws/chat/' + lobbyName + '/'
     );
 
-    // handle incoming messages
     chatSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
-        const chatLog = document.querySelector('#chat-log');
 
-        const now = new Date();
-        const timeString = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+        // 1. Handle Active User List Update
+        if (data.type === 'user_list') {
+            const userListDiv = document.getElementById('active-user-list');
+            userListDiv.innerHTML = '';
 
-        const messageElement = document.createElement('p');
-        messageElement.innerHTML = `
-            <small class="text-muted">[${timeString}]</small>
-            <strong>${data.user}:</strong> ${data.message}
-        `;
+            data.users.forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.style.cssText = "display: flex; align-items: center; margin-bottom: 12px;";
+                userItem.innerHTML = `
+                    <span style="height: 8px; width: 8px; background-color: #7377e4; border-radius: 50%; display: inline-block; margin-right: 12px; box-shadow: 0 0 5px #7377e4;"></span>
+                    <span style="color: #eee; font-weight: 500;">${user}</span>
+                `;
+                userListDiv.appendChild(userItem);
+            });
+        }
 
-        chatLog.appendChild(messageElement);
-        chatLog.scrollTop = chatLog.scrollHeight;
+        // 2. Handle Regular Chat Messages
+        else if (data.message || data.type === 'chat_message') {
+            const chatLog = document.getElementById('chat-log');
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+
+            chatLog.innerHTML += `
+                <div class="mb-2">
+                    <small class="text-muted" style="font-size: 0.75rem;">[${timeString}]</small>
+                    <strong style="color: #7377e4;">${data.user}:</strong>
+                    <span style="color: #eee;">${data.message}</span>
+                </div>`;
+
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
     };
 
     chatSocket.onclose = function(e) {
-        console.error('socket closed');
+        console.error('Lobby socket closed unexpectedly');
     };
 
-    // handle enter key submission
-    document.querySelector('#chat-message-input').focus();
-    document.querySelector('#chat-message-input').onkeyup = function(e) {
-        if (e.keyCode === 13) {
-            document.querySelector('#chat-message-submit').click();
-        }
+    // Auto-focus and handle Enter key
+    const messageInput = document.querySelector('#chat-message-input');
+    const messageSubmit = document.querySelector('#chat-message-submit');
+
+    messageInput.focus();
+    messageInput.onkeyup = function(e) {
+        if (e.keyCode === 13) { messageSubmit.click(); }
     };
 
-    // handle button click submission
-    document.querySelector('#chat-message-submit').onclick = function(e) {
-        const messageInputDom = document.querySelector('#chat-message-input');
-        const message = messageInputDom.value;
-
+    messageSubmit.onclick = function(e) {
+        const message = messageInput.value;
         if (message.trim() !== '') {
             chatSocket.send(JSON.stringify({ 'message': message }));
-            messageInputDom.value = '';
+            messageInput.value = '';
         }
     };
 
-    // scroll to bottom on load
+    // Initial scroll
     const chatLog = document.querySelector('#chat-log');
     chatLog.scrollTop = chatLog.scrollHeight;
 </script>
