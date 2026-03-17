@@ -1,5 +1,6 @@
 import uuid
-from django.http import HttpResponse, JsonResponse
+from django.db.models import Count, Q
+from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.text import slugify
 from .igdb import fetch_game_data, get_game_suggestions
@@ -41,19 +42,22 @@ def posts_list(request):
 
 def post_page(request, slug):
     post = get_object_or_404(Post, slug=slug)
-    has_applied = False
-    if request.user.is_authenticated:
-        has_applied = JoinRequest.objects.filter(post=post, applicant=request.user).exists()
 
+    has_applied = False
+    application_status = None
+
+    if request.user.is_authenticated:
+        application = JoinRequest.objects.filter(post=post, applicant=request.user).first()
+        if application:
+            has_applied = True
+            application_status = application.status
     if request.method == 'POST':
         form = forms.JoinRequestForm(request.POST)
-
         if form.is_valid() and not has_applied and request.user != post.author:
             join_request = form.save(commit=False)
             join_request.post = post
             join_request.applicant = request.user
             join_request.save()
-
             return redirect(request.path_info)
     else:
         form = forms.JoinRequestForm()
@@ -61,7 +65,8 @@ def post_page(request, slug):
     return render(request, 'posts/post_page.html', {
         'post': post,
         'form': form,
-        'has_applied': has_applied
+        'has_applied': has_applied,
+        'application_status': application_status
     })
 
 @login_required(login_url='/users/login/')
@@ -89,10 +94,38 @@ def post_new(request):
         form = CreatePost()
     return render(request, 'posts/post_new.html', {'form': form})
 
+
 @login_required
 def my_posts_view(request):
-    user_posts = Post.objects.filter(author=request.user).order_by('-date')
+    user_posts = Post.objects.filter(author=request.user).annotate(
+        pending_count=Count('join_requests', filter=Q(join_requests__status='Pending'))
+    ).order_by('-date')
     return render(request, 'posts/my_posts.html', {'posts': user_posts})
+
+@login_required(login_url='/users/login/')
+def manage_lobby(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    if request.user != post.author:
+        return HttpResponseForbidden("You are not the host of this lobby.")
+    applications = JoinRequest.objects.filter(post=post, status='Pending')
+
+    return render(request, 'queueup/manage_lobby.html', {
+        'post': post,
+        'applications': applications
+    })
+
+@login_required(login_url='/users/login/')
+def update_request(request, request_id, action):
+    join_request = get_object_or_404(JoinRequest, id=request_id)
+    if request.user != join_request.post.author:
+        return HttpResponseForbidden("Not authorized.")
+    if action == 'accept':
+        join_request.status = 'Accepted'
+    elif action == 'reject':
+        join_request.status = 'Rejected'
+
+    join_request.save()
+    return JsonResponse({'success': True, 'action': action, 'request_id': request_id})
 
 @login_required(login_url='/users/login/')
 def lobby_view(request, lobby_name):
