@@ -9,13 +9,6 @@
     <form class="form-with-validation" action="{% url 'users:register' %}" method="post">
         {% csrf_token %}
         {{ form }}
-
-        <!-- Date of Birth - Rowan -->
-        <div>
-            <label for="dob">Date of Birth:</label>
-            <input type="date" name="date_of_birth" id="dob">
-        </div>
-
         <button class="form-submit">Submit</button>
     </form>
 {% endblock %}
