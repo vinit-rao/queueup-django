@@ -10,7 +10,26 @@
 
 <section style="margin-top: 1rem;">
     <h2 style="font-size: 1.5rem; margin-bottom: 0.3rem;">Featured</h2>
+    <div class="posts-grid">
+    {% for post in posts %}
+        <a href="{% url 'posts:page' slug=post.slug %}" class="post-card">
+            {% if post.cover_url %}
+                <img src="{{ post.cover_url }}" alt="{{ post.game_name }}" class="game-cover">
+            {% else %}
+                <div class="placeholder-cover">{{ post.game_name }}</div>
+            {% endif %}
 
+            <div class="post-overlay">
+                <div class="post-text">
+                    <h2>{{ post.title }}</h2>
+                    <p>{{ post.game_name }}</p>
+                </div>
+            </div>
+        </a>
+    {% empty %}
+        <p>No lobbies created yet. Be the first!</p>
+    {% endfor %}
+    </div>
     <div style="display: flex; gap: 1rem; margin-top: 0;">
 
         <div style="background-color: #111; padding: 1rem; border-radius: 10px; flex: 1; border: 1px solid #44B78B;">
@@ -32,5 +51,6 @@
         </div>
 
     </div>
+
 </section>
 {% endblock %}

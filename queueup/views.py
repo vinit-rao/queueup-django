@@ -14,7 +14,8 @@ from django.db.models import Q
 from django.db.models import Q
 
 def home(request):
-    return render(request, 'home.html')
+    random_posts = Post.objects.all().order_by('?')[:3]
+    return render(request, 'home.html', {'posts': random_posts})
 
 def tutorial(request):
     return render(request, 'tutorial.html')
