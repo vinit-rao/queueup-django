@@ -67,6 +67,10 @@ def post_new(request):
         form = CreatePost()
     return render(request, 'posts/post_new.html', {'form': form})
 
+@login_required
+def my_posts_view(request):
+    user_posts = Post.objects.filter(author=request.user).order_by('-date')
+    return render(request, 'posts/my_posts.html', {'posts': user_posts})
 
 @login_required(login_url='/users/login/')
 def lobby_view(request, lobby_name):

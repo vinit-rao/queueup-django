@@ -38,6 +38,9 @@
           <li class="nav-item active">
             <a class="nav-link" href="{% url 'posts:new-post' %}" title="Create">Create <span class="sr-only">(current)</span></a>
           </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'posts:my-posts' %}" title="My Posts">My Posts <span class="sr-only">(current)</span></a>
+          </li>
       </ul>
       <ul class="navbar-nav">
           {% if user.is_authenticated %}

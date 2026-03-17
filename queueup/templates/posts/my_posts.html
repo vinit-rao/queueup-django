@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block title %}My Posts{% endblock %}
+
+{% block content %}
+    <h1>My Hosted Lobbies</h1>
+    <p>Manage the lobbies you have created and view pending applications.</p>
+
+    <div class="posts-grid">
+        {% for post in posts %}
+            <a href="{% url 'posts:page' post.slug %}" class="post-card">
+                {% if post.cover_url %}
+                    <img src="{{ post.cover_url }}" alt="{{ post.game_name }}" class="game-cover">
+                {% else %}
+                    <div class="placeholder-cover">{{ post.game_name }}</div>
+                {% endif %}
+                
+                <div class="post-overlay">
+                    <div class="post-text">
+                        <h2>{{ post.title }}</h2>
+                        </div>
+                </div>
+            </a>
+        {% empty %}
+            <p>You haven't created any lobbies yet.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

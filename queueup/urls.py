@@ -9,4 +9,5 @@ urlpatterns = [
     path('<slug:slug>', views.post_page, name='page'),
     path('chat/<slug:lobby_name>/', views.lobby_view, name='lobby'),
     path('api/games/search/', views.api_search_games, name='api-game-search'),
+    path('my-posts/', views.my_posts_view, name='my-posts'),
 ]
