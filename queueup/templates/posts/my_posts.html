@@ -11,7 +11,7 @@
 
     <div class="posts-grid">
         {% for post in posts %}
-            <div class="post-card" style="position: relative; background-color: #1a1a1a; overflow: visible; display: flex; flex-direction: column; box-shadow: 0 4px 8px rgba(0,0,0,0.3); margin-bottom: 20px; height: auto !important; padding: 12px;">
+            <div class="post-card game-card" style="">
 
                 {% if post.pending_count > 0 %}
                     <span style="position: absolute; top: -10px; right: -10px; background-color: #dc3545; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 0.9rem; z-index: 999; box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
@@ -21,7 +21,7 @@
 
                 <a href="{% url 'posts:lobby' lobby_name=post.slug %}" style="display: block; text-decoration: none;">
                     {% if post.cover_url %}
-                        <img src="{{ post.cover_url }}" alt="{{ post.game_name }}" class="game-cover">
+                        <img src="{{ post.cover_url }}" alt="{{ post.game_name }}" class="game-cover" style="border-radius: 3px">
                     {% else %}
                         <div style="width: 100%; height: 200px; background-color: #333; display: flex; align-items: center; justify-content: center; color: #888;">
                             {{ post.game_name }}
