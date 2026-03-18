@@ -259,25 +259,68 @@
                     const month = formData.get('dob_month');
                     const day = formData.get('dob_day');
                     const year = formData.get('dob_year');
+                    const gender = formData.get('gender');
 
+                    // 1. Force Gender Selection
+                    if (!gender) {
+                        errorDiv.innerHTML = "• Please select a gender.";
+                        errorDiv.style.display = 'block';
+                        submitBtn.innerText = originalText;
+                        submitBtn.disabled = false;
+                        return; // Stop submission
+                    }
+
+                    // 2. Validate Age (Must be 13+)
                     if (month && day && year) {
+                        const dobDate = new Date(year, month - 1, day); // month is 0-indexed in JS dates
+                        const thirteenYearsAgo = new Date();
+                        thirteenYearsAgo.setFullYear(thirteenYearsAgo.getFullYear() - 13);
+
+                        // If the chosen birth date is more recent than 13 years ago, they are under 13
+                        if (dobDate > thirteenYearsAgo) {
+                            errorDiv.innerHTML = "• You must be at least 13 years old to register.";
+                            errorDiv.style.display = 'block';
+                            submitBtn.innerText = originalText;
+                            submitBtn.disabled = false;
+                            return; // Stop submission
+                        }
+
+                        // Attach the formatted date string for Django
                         formData.append('date_of_birth', `${year}-${month}-${day}`);
                     }
                 }
 
+                // Send the request, telling Django we expect a JSON response
                 const response = await fetch(form.action, {
                     method: 'POST',
                     body: formData,
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
                 });
 
-                if (response.url.includes('/users/login') || response.url.includes('/users/register')) {
-                    errorDiv.innerText = defaultErrorMessage;
+                if (response.ok) {
+                    // Success! Refresh the page to show logged-in state
+                    window.location.reload();
+                } else {
+                    // Failure! Read the specific JSON errors sent by Django
+                    const data = await response.json();
+                    let errorHtml = '';
+
+                    if (data.errors) {
+                        // Loop through Django's form errors and stack them nicely
+                        for (const [field, msgs] of Object.entries(data.errors)) {
+                            errorHtml += `<div>• ${msgs.join(' ')}</div>`;
+                        }
+                    } else {
+                        errorHtml = defaultErrorMessage;
+                    }
+
+                    errorDiv.innerHTML = errorHtml;
                     errorDiv.style.display = 'block';
                     submitBtn.innerText = originalText;
                     submitBtn.disabled = false;
-                } else {
-                    window.location.reload();
                 }
             } catch (error) {
                 errorDiv.innerText = "A network error occurred. Please try again.";
