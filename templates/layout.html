@@ -113,7 +113,7 @@
               <button type="submit" class="btn-brand w-100 py-2">Log In</button>
             </form>
             <div class="text-center mt-4">
-                <a href="#" class="text-muted small" data-dismiss="modal" data-toggle="modal" data-target="#registerModal">New to QueueUp? Sign Up</a>
+                <p class="small text-muted mb-2">New to QueueUp? <a href="#" class="text-white" data-dismiss="modal" data-toggle="modal" data-target="#loginModal">Register</a></p>
             </div>
           </div>
         </div>
@@ -182,12 +182,12 @@
 
               <div class="form-group mb-3">
                   <label class="form-label-muted">Password</label>
-                  <input type="password" name="password1" class="form-control form-dark-input" placeholder="Must be 8-200 characters" required>
+                  <input type="password" id="reg-password" name="password1" class="form-control form-dark-input" placeholder="Must be 8-200 characters" required>
                   <div id="reg-error-password1" class="text-danger small mt-1 error-msg" style="display: none;"></div>
               </div>
               <div class="form-group mb-3">
                   <label class="form-label-muted">Confirm Password</label>
-                  <input type="password" name="password2" class="form-control form-dark-input" required>
+                  <input type="password" id="reg-confirm-password" name="password2" class="form-control form-dark-input" required>
                   <div id="reg-error-password2" class="text-danger small mt-1 error-msg" style="display: none;"></div>
               </div>
 
@@ -247,14 +247,40 @@
             });
         });
 
-        // --- 3. AJAX Auth Form Handling (UPDATED FOR INLINE ERRORS) ---
+        // --- 3. NEW: Active Password Matching ---
+        const pass1 = document.getElementById('reg-password');
+        const pass2 = document.getElementById('reg-confirm-password');
+        const pass2Error = document.getElementById('reg-error-password2');
+
+        function checkPasswordsMatch() {
+            // Only show the real-time error if they have started typing in the confirm box
+            if (pass2.value.length > 0) {
+                if (pass1.value !== pass2.value) {
+                    pass2Error.innerHTML = "• Passwords do not match.";
+                    pass2Error.style.display = 'block';
+                } else {
+                    pass2Error.style.display = 'none';
+                    pass2Error.innerHTML = "";
+                }
+            } else {
+                pass2Error.style.display = 'none';
+                pass2Error.innerHTML = "";
+            }
+        }
+
+        if (pass1 && pass2) {
+            pass1.addEventListener('input', checkPasswordsMatch);
+            pass2.addEventListener('input', checkPasswordsMatch);
+        }
+
+        // --- 4. AJAX Auth Form Handling ---
         async function handleAuthSubmit(event, formId, defaultErrorMessage) {
             event.preventDefault();
 
             const form = document.getElementById(formId);
             const submitBtn = form.querySelector('button[type="submit"]');
 
-            // 1. Clear all existing error messages in this form
+            // Clear all existing error messages in this form
             form.querySelectorAll('.error-msg').forEach(el => {
                 el.style.display = 'none';
                 el.innerHTML = '';
@@ -273,13 +299,15 @@
                     const day = formData.get('dob_day');
                     const year = formData.get('dob_year');
                     const gender = formData.get('gender');
+                    const password = formData.get('password1');
+                    const confirmPassword = formData.get('password2');
 
                     let hasFrontendError = false;
 
                     // A. Force Gender Selection
                     if (!gender) {
                         const genderErr = document.getElementById('reg-error-gender');
-                        genderErr.innerHTML = "Gender is required.";
+                        genderErr.innerHTML = "• Gender is required.";
                         genderErr.style.display = 'block';
                         hasFrontendError = true;
                     }
@@ -292,7 +320,7 @@
 
                         if (dobDate > thirteenYearsAgo) {
                             const dobErr = document.getElementById('reg-error-date_of_birth');
-                            dobErr.innerHTML = "You must be at least 13 years old to register.";
+                            dobErr.innerHTML = "• You must be at least 13 years old to register.";
                             dobErr.style.display = 'block';
                             hasFrontendError = true;
                         } else {
@@ -300,7 +328,45 @@
                         }
                     }
 
-                    // Stop if we caught frontend errors
+                    // C. Strict Password Validation
+                    let pwdErrors = [];
+                    if (!password) {
+                        pwdErrors.push("Password cannot be left blank.");
+                    } else {
+                        if (password.length < 8 || password.length > 200) {
+                            pwdErrors.push("Password must be 8-200 characters.");
+                        }
+                        if (!/[A-Z]/.test(password)) {
+                            pwdErrors.push("Password must include at least 1 capital letter.");
+                        }
+                        if (!/[a-z]/.test(password)) {
+                            pwdErrors.push("Password must include at least 1 lowercase letter.");
+                        }
+                        if (!/\d/.test(password)) {
+                            pwdErrors.push("Password must include at least 1 number.");
+                        }
+                        // Checks for common special characters
+                        if (!/[!@#$%^&*(),.?":{}|<>\-_~`+=\[\]\\;']/.test(password)) {
+                            pwdErrors.push("Password must have at least 1 special character.");
+                        }
+                    }
+
+                    if (pwdErrors.length > 0) {
+                        const pwdErrDiv = document.getElementById('reg-error-password1');
+                        pwdErrDiv.innerHTML = "• " + pwdErrors.join("<br>• ");
+                        pwdErrDiv.style.display = 'block';
+                        hasFrontendError = true;
+                    }
+
+                    // D. Catch Mismatched Passwords on Submit
+                    if (password !== confirmPassword) {
+                        const confirmErrDiv = document.getElementById('reg-error-password2');
+                        confirmErrDiv.innerHTML = (confirmErrDiv.innerHTML ? confirmErrDiv.innerHTML + '<br>' : '') + "• Passwords do not match.";
+                        confirmErrDiv.style.display = 'block';
+                        hasFrontendError = true;
+                    }
+
+                    // Stop submission if we caught any frontend errors
                     if (hasFrontendError) {
                         submitBtn.innerText = originalText;
                         submitBtn.disabled = false;
@@ -322,36 +388,30 @@
                     // Success! Refresh the page
                     window.location.reload();
                 } else {
-                    // Failure! Map errors to their specific fields
+                    // Failure! Map backend errors to their specific fields
                     const data = await response.json();
 
                     if (data.errors) {
                         for (const [field, msgs] of Object.entries(data.errors)) {
                             let errorTarget;
 
-                            // If it's the login form, everything funnels to the general error div
                             if (formId === 'loginForm') {
                                 errorTarget = document.getElementById('login-error-general');
-                            }
-                            // If it's register, try to match the Django field name (e.g. username, password1)
-                            else {
+                            } else {
                                 errorTarget = document.getElementById(`reg-error-${field}`);
-                                // If Django sends a global error (like "__all__" for mismatched passwords), fallback to general
                                 if (!errorTarget) {
                                     errorTarget = document.getElementById('reg-error-general');
                                 }
                             }
 
                             if (errorTarget) {
-                                // Add line breaks if there are multiple errors for a single field
-                                errorTarget.innerHTML += (errorTarget.innerHTML ? '<br>' : '') + msgs.join('<br>');
+                                errorTarget.innerHTML += (errorTarget.innerHTML ? '<br>' : '') + "• " + msgs.join('<br>• ');
                                 errorTarget.style.display = 'block';
                             }
                         }
                     } else {
-                        // Fallback if data.errors is missing
                         let fallbackTarget = formId === 'loginForm' ? document.getElementById('login-error-general') : document.getElementById('reg-error-general');
-                        fallbackTarget.innerHTML = defaultErrorMessage;
+                        fallbackTarget.innerHTML = "• " + defaultErrorMessage;
                         fallbackTarget.style.display = 'block';
                     }
 
@@ -359,9 +419,8 @@
                     submitBtn.disabled = false;
                 }
             } catch (error) {
-                // Catch severe network failures
                 let fatalTarget = formId === 'loginForm' ? document.getElementById('login-error-general') : document.getElementById('reg-error-general');
-                fatalTarget.innerHTML = "A network error occurred. Please try again.";
+                fatalTarget.innerHTML = "• A network error occurred. Please try again.";
                 fatalTarget.style.display = 'block';
 
                 submitBtn.innerText = originalText;
@@ -369,7 +428,6 @@
             }
         }
 
-        // Attach listeners
         const loginForm = document.getElementById('loginForm');
         if (loginForm) {
             loginForm.addEventListener('submit', (e) => handleAuthSubmit(e, 'loginForm', 'Invalid username or password.'));
