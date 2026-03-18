@@ -2,147 +2,301 @@
 {% load static %}
 <html lang="en">
   <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
 
-    <title>{% block title %}Home - GameSpot{% endblock %}</title>
-     <!-- Favicon - Rowan -->
-    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <script src="{% static 'js/main.js' %}" defer></script>
+    <link rel="stylesheet" href="{% static 'css/general.css' %}">
+
+    <title>{% block title %}QueueUp{% endblock %}</title>
   </head>
 
-  <!-- Layout Fix - Rowan -->
-  <body style="min-height: 100vh; display: flex; flex-direction: column;">
+  <body>
+    <nav class="navbar navbar-expand-md px-4 navbar-dark-custom">
+      <div class="container-fluid p-0">
 
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="/">GS</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarText">
-      <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/" title="Home">Home <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="/about" title="About">About <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="{% url 'posts:list' %}" title="Explore">Explore <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="{% url 'posts:new-post' %}" title="Create">Create <span class="sr-only">(current)</span></a>
-          </li>
+          <a class="navbar-brand navbar-brand-logo" href="/">
+              <div class="navbar-icon-wrapper text-white font-weight-bold" style="font-size: 1.1rem; font-family: sans-serif;">
+                  Q
+              </div>
+              <span>QueueUp</span>
+          </a>
 
-      </ul>
-      <ul class="navbar-nav">
-          {% if user.is_authenticated %}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarProfile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display: flex; align-items: center; font-weight: bold; color: #333;">
-
-              <svg width="24" height="24" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 8px; color: #44B78B;">
-                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+          <button class="navbar-toggler border-0 px-0" type="button" data-toggle="collapse" data-target="#navbarNav" style="outline: none;">
+              <svg width="28" height="28" fill="#e0e0e0" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
               </svg>
+          </button>
 
-              {{ user.username }}
-            </a>
+          <div class="collapse navbar-collapse" id="navbarNav">
 
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarProfile" style="border-radius: 8px; border: 1px solid #ddd; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            <ul class="navbar-nav mr-auto mt-3 mt-md-0">
+              <li class="nav-item mr-md-3"><a class="nav-link text-white" href="/">Home</a></li>
+              <li class="nav-item mr-md-3"><a class="nav-link text-white" href="{% url 'posts:list' %}">Explore</a></li>
 
-              <a class="dropdown-item" href="{% url 'posts:my-posts' %}" style="padding: 10px 20px;">My Lobbies {% if pending_host_requests > 0 %}
-                    <span class="badge badge-danger badge-pill ml-1">{{ pending_host_requests }}</span>
-                {% endif %}</a>
+              {% if user.is_authenticated %}
+                  <li class="nav-item"><a class="nav-link text-white" href="{% url 'posts:my-posts' %}">Lobbies</a></li>
+              {% else %}
+                  <li class="nav-item"><a class="nav-link text-white" href="#" data-toggle="modal" data-target="#loginModal">Lobbies</a></li>
+              {% endif %}
+            </ul>
 
-              <div class="dropdown-divider"></div>
+            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center mt-3 mt-md-0">
 
-              <form action="{% url 'users:logout' %}" method="post" style="margin: 0;">
-                {% csrf_token %}
-                <button type="submit" class="dropdown-item text-danger" style="cursor: pointer; padding: 10px 20px; border: none; background: transparent; width: 100%; text-align: left;">
-                  Logout
-                </button>
-              </form>
+                {% if user.is_authenticated %}
+                  <a href="{% url 'posts:new-post' %}" class="btn-brand-outline btn-sm d-flex align-items-center mb-3 mb-md-0 mr-md-3">
+                      <svg width="14" height="14" fill="currentColor" class="mr-2" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg> Create
+                  </a>
 
+                  <a href="#" class="text-muted mb-3 mb-md-0 mr-md-3 d-none d-md-block">
+                      <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/></svg>
+                  </a>
+
+                  <div class="dropdown w-100 w-md-auto">
+                    <a href="#" id="navbarProfile" role="button" data-toggle="dropdown" class="d-flex align-items-center text-decoration-none">
+                      <div class="profile-avatar mr-2 mr-md-0"><svg width="20" height="20" fill="#888" viewBox="0 0 16 16"><path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg></div>
+                      <span class="d-md-none text-white">{{ user.username }}</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right form-dark-input mt-2 position-absolute" style="right: 0; left: auto;">
+                      <span class="dropdown-item text-light mb-2">Logged in as <strong>{{ user.username }}</strong></span>
+                      <a class="dropdown-item text-light" href="{% url 'posts:my-posts' %}">My Lobbies</a>
+                      <div class="dropdown-divider"></div>
+                      <form action="{% url 'users:logout' %}" method="post" class="m-0">
+                        {% csrf_token %}
+                        <button type="submit" class="dropdown-item text-danger" style="background: transparent;">Log Out</button>
+                      </form>
+                    </div>
+                  </div>
+
+                {% else %}
+                  <a href="#" data-toggle="modal" data-target="#loginModal" class="btn-brand-outline btn-sm d-flex align-items-center mb-3 mb-md-0 mr-md-3">
+                      <svg width="14" height="14" fill="currentColor" class="mr-2" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg> Create
+                  </a>
+
+                  <div class="d-flex w-100 w-md-auto">
+                      <button class="btn btn-sm text-white mr-2" data-toggle="modal" data-target="#loginModal" style="background: transparent;">Login</button>
+                      <button class="btn btn-sm text-white" data-toggle="modal" data-target="#registerModal" style="background: transparent;">Sign Up</button>
+                  </div>
+                {% endif %}
             </div>
-          </li>
-
-          {% else %}
-              <li class="nav-item active">
-                <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal" title="Login">
-                    Login
-                </a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="{% url 'users:register' %}" title="Register">Register <span class="sr-only">(current)</span></a>
-              </li>
-          {% endif %}
-      </ul>
-  </div>
-</nav>
-
-  <!-- Layout Fix - Rowan -->
-  <main style="flex: 1;">
-      {% block content %}
-        <h1>this is header text. also i like monster hunter.</h1>
-          <p>Check out my <a href="/about">About</a> Page.</p>
-      {% endblock %}
-  </main>
-
-  <!-- Footer - Rowan -->
-  <footer class="bg-white text-dark text-center mt-5">
-    <div class="container p-2">
-      <p class="mb-0" style="font-size: 14px;">© 2026 QueueUp</p>
-      <small class="d-block" style="font-size: 12px; line-height: 1;">
-        <a href="/about" class="text-dark">Place</a> |
-        <a href="#" class="text-dark">Holder</a>
-      </small>
-    </div>
-  </footer>
-
-    <!-- Optional JavaScript -->
-  <!-- Login Modal -->
-<div class="modal fade" id="loginModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h5 class="modal-title">Login</h5>
-        <button type="button" class="close" data-dismiss="modal">
-          <span>&times;</span>
-        </button>
-      </div>
-
-      <div class="modal-body">
-        <form method="POST" action="{% url 'users:login' %}">
-          {% csrf_token %}
-
-          <div class="form-group">
-            <input type="text" name="username" class="form-control" placeholder="Username">
           </div>
-
-          <div class="form-group">
-            <input type="password" name="password" class="form-control" placeholder="Password">
-          </div>
-
-          <button type="submit" class="btn btn-primary">Login</button>
-        </form>
-
-        <hr>
-        <p>Don't have an account?</p>
-        <a href="{% url 'users:register' %}">Register</a>
       </div>
+    </nav>
 
+    <main class="container mt-4 flex-grow-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <div class="modal fade" id="loginModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-dark-content p-2">
+          <div class="modal-header border-0 pb-0">
+            <h4 class="modal-title font-weight-bold">Log In</h4>
+            <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div id="loginErrors" class="alert alert-danger" style="display: none;"></div>
+            <form id="loginForm" method="POST" action="{% url 'users:login' %}">
+              {% csrf_token %}
+              <div class="form-group mb-3">
+                <label class="form-label-muted">Username</label>
+                <input type="text" name="username" class="form-control form-dark-input" required>
+              </div>
+              <div class="form-group mb-4">
+                <label class="form-label-muted">Password</label>
+                <input type="password" name="password" class="form-control form-dark-input" required>
+              </div>
+              <button type="submit" class="btn-brand w-100 py-2">Log In</button>
+            </form>
+            <div class="text-center mt-4">
+                <a href="#" class="text-muted small" data-dismiss="modal" data-toggle="modal" data-target="#registerModal">Need an account? Sign Up</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <div class="modal fade" id="registerModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-dark-content p-2">
+          <div class="modal-header border-0 pb-0">
+            <h4 class="modal-title font-weight-bold">Sign Up</h4>
+            <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+
+            <div id="registerErrors" class="alert alert-danger" style="display: none;"></div>
+
+            <form id="registerForm" method="POST" action="{% url 'users:register' %}">
+              {% csrf_token %}
+
+              <div class="form-group mb-3">
+                <label class="form-label-muted">Username</label>
+                <input type="text" name="username" class="form-control form-dark-input" required>
+              </div>
+
+              <div class="form-group mb-3">
+                <label class="form-label-muted">Birthday</label>
+                <div class="d-flex justify-content-between">
+                  <select name="dob_month" class="form-control form-dark-input mr-2" required>
+                    <option value="" disabled selected>Month</option>
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07">July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                  </select>
+                  <select name="dob_day" class="form-control form-dark-input mr-2" required>
+                    <option value="" disabled selected>Day</option>
+                  </select>
+                  <select name="dob_year" class="form-control form-dark-input" required>
+                    <option value="" disabled selected>Year</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group mb-3">
+                <label class="form-label-muted">Gender</label>
+                <input type="hidden" id="genderInput" name="gender" required>
+                <div class="d-flex" style="border: 1px solid var(--stroke); border-radius: 6px; overflow: hidden;">
+                  <button type="button" class="btn gender-btn flex-fill" data-value="M" style="background: var(--main-secondary); color: var(--fortiary); border: none; border-right: 1px solid var(--stroke); border-radius: 0; padding: 10px; transition: 0.2s;">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M9.5 2a.5.5 0 0 1 0-1h5a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0V2.707L9.871 6.836a5 5 0 1 1-.707-.707L13.293 2H9.5zM6 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/></svg>
+                  </button>
+                  <button type="button" class="btn gender-btn flex-fill" data-value="F" style="background: var(--main-secondary); color: var(--fortiary); border: none; border-radius: 0; padding: 10px; transition: 0.2s;">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM3 5a5 5 0 1 1 5.5 4.975V12h2a.5.5 0 0 1 0 1h-2v2.5a.5.5 0 0 1-1 0V13h-2a.5.5 0 0 1 0-1h2v-2.025A5 5 0 0 1 3 5z"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-group mb-3">
+                  <label class="form-label-muted">Password</label>
+                  <input type="password" name="password1" class="form-control form-dark-input" required>
+              </div>
+                <div class="form-group mb-4">
+                  <label class="form-label-muted">Confirm Password</label>
+                  <input type="password" name="password2" class="form-control form-dark-input" required>
+               </div>
+
+              <button type="submit" class="btn-brand w-100 py-2">Sign Up</button>
+            </form>
+
+            <div class="text-center mt-3">
+              <p class="small text-muted mb-2">Already a member? <a href="#" class="text-white" data-dismiss="modal" data-toggle="modal" data-target="#loginModal">Log In</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // --- 1. Populate Birthday Dropdowns ---
+        const daySelect = document.querySelector('select[name="dob_day"]');
+        const yearSelect = document.querySelector('select[name="dob_year"]');
+
+        if (daySelect && yearSelect) {
+            for (let i = 1; i <= 31; i++) {
+                let option = document.createElement('option');
+                let dayString = i < 10 ? '0' + i : i;
+                option.value = dayString;
+                option.text = i;
+                daySelect.appendChild(option);
+            }
+            const currentYear = new Date().getFullYear();
+            for (let i = currentYear; i >= 1900; i--) {
+                let option = document.createElement('option');
+                option.value = i;
+                option.text = i;
+                yearSelect.appendChild(option);
+            }
+        }
+
+        // --- 2. Gender Button Visuals & Input ---
+        const genderBtns = document.querySelectorAll('.gender-btn');
+        const genderInput = document.getElementById('genderInput');
+
+        genderBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                genderBtns.forEach(b => {
+                    b.style.backgroundColor = 'var(--main-secondary)';
+                    b.style.color = 'var(--fortiary)';
+                });
+                this.style.backgroundColor = 'var(--main-fiftiary)';
+                this.style.color = 'var(--primary)';
+                genderInput.value = this.getAttribute('data-value');
+            });
+        });
+
+        // --- 3. AJAX Auth Form Handling ---
+        async function handleAuthSubmit(event, formId, errorDivId, defaultErrorMessage) {
+            event.preventDefault();
+
+            const form = document.getElementById(formId);
+            const errorDiv = document.getElementById(errorDivId);
+            const submitBtn = form.querySelector('button[type="submit"]');
+
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = 'Processing...';
+            submitBtn.disabled = true;
+            errorDiv.style.display = 'none';
+
+            try {
+                const formData = new FormData(form);
+
+                if (formId === 'registerForm') {
+                    const month = formData.get('dob_month');
+                    const day = formData.get('dob_day');
+                    const year = formData.get('dob_year');
+
+                    if (month && day && year) {
+                        formData.append('date_of_birth', `${year}-${month}-${day}`);
+                    }
+                }
+
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+
+                if (response.url.includes('/users/login') || response.url.includes('/users/register')) {
+                    errorDiv.innerText = defaultErrorMessage;
+                    errorDiv.style.display = 'block';
+                    submitBtn.innerText = originalText;
+                    submitBtn.disabled = false;
+                } else {
+                    window.location.reload();
+                }
+            } catch (error) {
+                errorDiv.innerText = "A network error occurred. Please try again.";
+                errorDiv.style.display = 'block';
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) {
+            loginForm.addEventListener('submit', (e) => handleAuthSubmit(e, 'loginForm', 'loginErrors', 'Invalid username or password.'));
+        }
+
+        const registerForm = document.getElementById('registerForm');
+        if (registerForm) {
+            registerForm.addEventListener('submit', (e) => handleAuthSubmit(e, 'registerForm', 'registerErrors', 'Registration failed. Check your inputs.'));
+        }
+    });
+    </script>
   </body>
 </html>

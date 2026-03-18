@@ -15,7 +15,7 @@ from django.db.models import Q
 from django.db.models import Q
 
 def home(request):
-    random_posts = Post.objects.all().order_by('?')[:3]
+    random_posts = Post.objects.all().order_by('?')[:4]
     return render(request, 'home.html', {'posts': random_posts})
 
 def tutorial(request):
@@ -96,12 +96,19 @@ def post_new(request):
     return render(request, 'posts/post_new.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/users/login/')
 def my_posts_view(request):
     user_posts = Post.objects.filter(author=request.user).annotate(
         pending_count=Count('join_requests', filter=Q(join_requests__status='Pending'))
     ).order_by('-date')
-    return render(request, 'posts/my_posts.html', {'posts': user_posts})
+    joined_posts = Post.objects.filter(
+        join_requests__applicant=request.user,
+        join_requests__status='Accepted'
+    ).order_by('-date')
+    return render(request, 'posts/my_posts.html', {
+        'posts': user_posts,
+        'joined_posts': joined_posts
+    })
 
 @login_required(login_url='/users/login/')
 def manage_lobby(request, slug):
