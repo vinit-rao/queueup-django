@@ -3,40 +3,65 @@
 {% block title %}Lobbies - QueueUp{% endblock %}
 
 {% block content %}
-<section>
-    <div class="list-header">
-    <h1>Active Lobbies</h1>
+<section class="container mt-5">
 
-    <div class="search-container">
-        <form class="" action="{% url 'posts:list' %}" method="get">
-            <input type="text" name="q" placeholder="Search..." value="{{ query|default:'' }}" style="font-size: 30px">
-            <button type="submit" class="button-thingy" style="font-size: 30px">Search</button>
-        </form>
+    <div class="mb-4">
+        <h2 style="font-weight: 800; font-size: 1.8rem; margin-bottom: 5px; color: white;">Explore Games</h2><br>
+
+        <div class="search-container" style="max-width: 350px;">
+            <form action="{% url 'posts:list' %}" method="get" class="d-flex">
+                <div class="input-group" style="background: #1a1a1a; border: 1px solid #333; border-radius: 8px; overflow: hidden;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="background: transparent; border: none; color: #666;">
+                            <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
+                        </span>
+                    </div>
+                    <input type="text" name="q" class="form-control" placeholder="Search" value="{{ query|default:'' }}" style="background: transparent; border: none; color: white; box-shadow: none;">
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-    <div class="posts-grid">
+    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4">
         {% for post in posts %}
-            <a href="{% url 'posts:page' slug=post.slug %}" class="post-card">
-                {% if post.cover_url %}
-                    <img src="{{ post.cover_url }}" alt="{{ post.game_name }}" class="game-cover">
-                {% else %}
-                    <div class="placeholder-cover">No Cover Art</div>
-                {% endif %}
+            <div class="col mb-4">
+                <a href="{% url 'posts:page' slug=post.slug %}" class="text-decoration-none" style="color: inherit; display: block; transition: transform 0.2s;">
 
-                <div class="post-overlay">
-                    <div class="post-text" style="color: #CAC8EA">
-                        <h2>{{ post.title }}</h2>
-                        {% if post.game_name %}
-                            <p style="color: #9996C0">{{ post.game_name }}</p>
+                    <div style="width: 100%; border-radius: 12px; height: 160px; background-color: #d1d5db; overflow: hidden; position: relative;">
+                        {% if post.cover_url %}
+                            <img src="{{ post.cover_url }}" alt="{{ post.game_name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        {% else %}
+                            <div class="d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; background: #222;">
+                                <svg width="40" height="40" fill="#333" viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm2 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/></svg>
+                            </div>
                         {% endif %}
                     </div>
-                </div>
-            </a>
+
+                    <div class="d-flex mt-2">
+                        <div class="mr-2 mt-1">
+                            <div style="width: 24px; height: 24px; border-radius: 50%; background-color: #666; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                <svg width="16" height="16" fill="#aaa" viewBox="0 0 16 16"><path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h6 style="color: #fff; margin: 0; font-weight: bold; font-size: 0.95rem; line-height: 1.2;">{{ post.title|truncatechars:35 }}</h6>
+                            <p class="text-muted mb-1" style="font-size: 0.75rem;">Hosted by {{ post.author.username }} • {{ post.date|timesince }} ago</p>
+
+                            <div class="d-flex flex-wrap" style="gap: 5px;">
+                                {% if post.game_name %}
+                                    <span style="background: #1a1a1a; border: 1px solid #333; color: #ccc; border-radius: 4px; padding: 2px 6px; font-size: 0.7rem; font-weight: normal;">{{ post.game_name }}</span>
+                                {% endif %}
+                                <span style="background: #1a1a1a; border: 1px solid #333; color: #ccc; border-radius: 4px; padding: 2px 6px; font-size: 0.7rem; font-weight: normal;">Lobby</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
         {% empty %}
-            <div style="grid-column: 1/-1; text-align: left;">
-                <p>No active lobbies found matching your search.</p>
-                <a href="{% url 'posts:list' %}" class="button-thingy"> Clear search </a>
+            <div class="col-12 mt-5">
+                <p class="text-muted">No active lobbies found matching your search.</p>
+                <a href="{% url 'posts:list' %}" style="color: #888; text-decoration: underline;">Clear search</a>
             </div>
         {% endfor %}
     </div>

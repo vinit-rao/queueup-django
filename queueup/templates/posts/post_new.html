@@ -3,89 +3,120 @@
 {% block title %}Create - QueueUp{% endblock %}
 
 {% block content %}
-    <section>
-        <h1>Create Post</h1>
-        <form class="form-with-validation" action="{% url 'posts:new-post' %}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
+<div class="container mt-5 pb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card-dark p-5">
+                <h1 class="mb-4 font-weight-bold text-white border-bottom pb-3 border-secondary">Create Post</h1>
 
-            <div class="autocomplete-container" id="form-container">
-                {{ form }}
+                <form class="form-with-validation" action="{% url 'posts:new-post' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="form-group mb-4">
+                        <label class="form-label-muted text-muted">Title:</label>
+                        {{ form.title }}
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="form-label-muted text-muted">Body:</label>
+                        {{ form.body }}
+                    </div>
+
+                    <div class="form-group mb-4 position-relative">
+                        <label class="form-label-muted text-muted">Game name:</label>
+
+                        <input type="text" id="id_game_name" name="game_name" class="form-control form-dark-input" autocomplete="off" placeholder="Search for a game..." required>
+
+                        <ul id="autocomplete-results" class="suggestions-dropdown d-none" style="list-style: none; padding: 0; margin: 0;"></ul>
+                    </div>
+
+                    {% for hidden in form.hidden_fields %}
+                        {{ hidden }}
+                    {% endfor %}
+
+                    <button type="submit" class="btn-brand w-100 py-2 mt-4">Submit</button>
+                </form>
             </div>
+        </div>
+    </div>
+</div>
 
-            <button class="form-submit">Submit</button>
-        </form>
-    </section>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const gameInput = document.getElementById('id_game_name');
+        const resultList = document.getElementById('autocomplete-results');
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // get dom elements
-            const gameInput = document.getElementById('id_game_name');
-            const container = document.getElementById('form-container');
+        gameInput.addEventListener('input', function() {
+            const query = gameInput.value.trim();
 
-            // init dropdown ui
-            const resultList = document.createElement('ul');
-            resultList.classList.add('autocomplete-results');
-            resultList.style.display = 'none';
-            container.appendChild(resultList);
+            if (query.length < 2) {
+                resultList.classList.add('d-none');
+                return;
+            }
 
-            // watch input keystrokes
-            gameInput.addEventListener('input', function() {
-                const query = gameInput.value.trim();
+            fetch(`{% url 'posts:api-game-search' %}?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    resultList.innerHTML = ''; // Clear old results
 
-                // hide menu if query is too short
-                if (query.length < 2) {
-                    resultList.style.display = 'none';
-                    return;
-                }
+                    if (data.results.length > 0) {
+                        data.results.forEach(game => {
+                            const li = document.createElement('li');
 
-                // fetch igdb suggestions
-                fetch(`{% url 'posts:api-game-search' %}?q=${encodeURIComponent(query)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        resultList.innerHTML = '';
+                            // Apply the custom CSS class we made earlier
+                            li.className = 'suggestion-item d-flex align-items-center text-white';
 
-                        if (data.results.length > 0) {
-                            data.results.forEach(game => {
-                                const li = document.createElement('li');
+                            // Icon
+                            if (game.icon_url) {
+                                const img = document.createElement('img');
+                                img.src = game.icon_url;
+                                img.className = 'autocomplete-icon mr-3';
+                                img.style.width = '30px';
+                                img.style.height = '30px';
+                                img.style.borderRadius = '4px';
+                                img.style.objectFit = 'cover';
+                                li.appendChild(img);
+                            } else {
+                                const placeholder = document.createElement('div');
+                                placeholder.textContent = '🎮';
+                                placeholder.className = 'autocomplete-icon mr-3 d-flex align-items-center justify-content-center bg-dark';
+                                placeholder.style.width = '30px';
+                                placeholder.style.height = '30px';
+                                placeholder.style.borderRadius = '4px';
+                                li.appendChild(placeholder);
+                            }
 
-                                // render cover or placeholder
-                                if (game.icon_url) {
-                                    const img = document.createElement('img');
-                                    img.src = game.icon_url;
-                                    img.className = 'autocomplete-icon';
-                                    li.appendChild(img);
-                                } else {
-                                    const placeholder = document.createElement('div');
-                                    placeholder.className = 'autocomplete-icon placeholder-icon';
-                                    li.appendChild(placeholder);
-                                }
+                            // Text
+                            const textSpan = document.createElement('span');
+                            textSpan.textContent = game.name;
+                            textSpan.className = 'font-weight-bold';
+                            li.appendChild(textSpan);
 
-                                // render text
-                                const textSpan = document.createElement('span');
-                                textSpan.textContent = game.name;
-                                li.appendChild(textSpan);
-
-                                // handle selection
-                                li.addEventListener('click', function() {
-                                    gameInput.value = game.name;
-                                    resultList.style.display = 'none';
-                                });
-
-                                resultList.appendChild(li);
+                            // Click Event to select the game
+                            li.addEventListener('click', function() {
+                                gameInput.value = game.name;
+                                resultList.classList.add('d-none');
                             });
-                            resultList.style.display = 'block';
-                        } else {
-                            resultList.style.display = 'none';
-                        }
-                    });
-            });
 
-            // close menu on outside click
-            document.addEventListener('click', function(e) {
-                if (e.target !== gameInput) {
-                    resultList.style.display = 'none';
-                }
-            });
+                            resultList.appendChild(li);
+                        });
+
+                        // Show the dropdown
+                        resultList.classList.remove('d-none');
+                    } else {
+                        // Hide if no results
+                        resultList.classList.add('d-none');
+                    }
+                })
+                .catch(error => console.error('Error fetching games:', error));
         });
-    </script>
+
+        // Hide dropdown if user clicks anywhere else on the screen
+        document.addEventListener('click', function(e) {
+            if (e.target !== gameInput && !resultList.contains(e.target)) {
+                resultList.classList.add('d-none');
+            }
+        });
+    });
+</script>
 {% endblock %}

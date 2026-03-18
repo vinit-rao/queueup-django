@@ -3,62 +3,64 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-<section class="post-details">
-    <div class="game-banner-container" style="position: relative; height: 400px; width: 100%; overflow: hidden; background: #1a1a1a;">
+<section>
+    <div class="banner-container">
         {% if post.banner_url %}
-            <img class="game-banner" src="{{ post.banner_url }}" alt="{{ post.game_name }}" style="width: 100%; height: 100%; object-fit: cover;">
+            <img class="banner-img" src="{{ post.banner_url }}" alt="{{ post.game_name }}">
         {% else %}
-            <div style="height: 100%; display: flex; align-items: center; justify-content: center; color: #555;">No Banner Art</div>
+            <div class="d-flex align-items-center justify-content-center h-100 text-muted">No Banner Art</div>
         {% endif %}
 
-        <div class="post-overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px; background: linear-gradient(transparent, rgba(0,0,0,0.9));">
-            <div class="post-text">
-                <h1 style="color: white; font-weight: bold; margin: 0;">{{ post.title }}</h1>
-                {% if post.game_name %}
-                    <p style="color: #7377E4; font-size: 1.2rem; margin: 5px 0 0 0;">{{ post.game_name }}</p>
-                {% endif %}
-            </div>
+        <div class="banner-overlay">
+            <h1 class="text-white font-weight-bold mb-1 display-4">{{ post.title }}</h1>
+            {% if post.game_name %}
+                <p class="text-muted font-weight-bold text-uppercase mb-0">{{ post.game_name }}</p>
+            {% endif %}
         </div>
     </div>
 
-    <div class="container-fluid mt-4">
+    <div class="container-fluid mt-5">
         <div class="row">
             <div class="col-md-8">
-                <div class="post-body" style="color: #ccc; line-height: 1.8; padding: 20px 0;">
+                <div class="text-light" style="line-height: 1.8; font-size: 1.1rem;">
                     {{ post.body|linebreaks }}
                 </div>
             </div>
 
             <div class="col-md-4">
-                <div class="sidebar-card" style="border: 1px solid #7377e4; padding: 20px; background: #1a1a1a;">
-                    <p style="color: #CAC8EA;">Hosted by {{ post.author.username }}</p>
+                <div class="card-dark p-4">
+                    <p class="text-muted mb-4 small">Hosted by <strong class="text-white">{{ post.author.username }}</strong></p>
 
                     {% if user.is_authenticated %}
                         {% if user == post.author %}
-                            <a href="{% url 'posts:manage-lobby' post.slug %}" class="btn btn-block" style="background: #7377E4; color: white; font-weight: bold;">MANAGE LOBBY</a>
-                            <a href="{% url 'posts:lobby' lobby_name=post.slug %}" class="btn btn-block mt-2" style="border: 1px solid #7377E4; color: white; background: transparent;">ENTER CHAT</a>
+                            <a href="{% url 'posts:manage-lobby' post.slug %}" class="btn-brand text-center d-block mb-3">Manage Lobby</a>
+                            <a href="{% url 'posts:lobby' lobby_name=post.slug %}" class="btn-brand-outline text-center d-block">Enter Chat</a>
 
                         {% elif application_status == 'Accepted' %}
-                            <div class="alert alert-success" style="background: transparent; border: 1px solid #73e4a0; color: #73e4a0;"><h1>ACCEPTED</h1></div>
-                            <a href="{% url 'posts:lobby' lobby_name=post.slug %}" class="btn btn-block" style="background: #7377e4; color: white; font-weight: bold;">JOIN LOBBY</a>
+                            <div class="alert text-center font-weight-bold border-0 text-white" style="background: rgba(255,255,255,0.1);">ACCEPTED</div>
+                            <a href="{% url 'posts:lobby' lobby_name=post.slug %}" class="btn-brand text-center d-block">JOIN LOBBY</a>
 
                         {% elif application_status == 'Pending' %}
-                            <div class="alert alert-info" style="background: transparent; border: 1px solid #7377e4; color: #7377e4;">REQUEST PENDING</div>
+                            <div class="alert text-center text-muted border border-secondary">Request Pending</div>
 
                         {% elif application_status == 'Rejected' %}
-                            <div class="alert alert-danger" style="background: transparent; border: 1px solid #dc3545; color: #dc3545;">DECLINED</div>
+                            <div class="alert text-center text-muted border border-secondary" style="opacity: 0.5;">Declined</div>
 
                         {% else %}
                             <form method="POST">
                                 {% csrf_token %}
-                                <div class="form-group">
+                                <div class="form-group mb-4">
                                     {{ form.message }}
                                 </div>
-                                <button type="submit" class="btn btn-block" style="background: #7377E4; color: white; font-weight: bold;">SEND REQUEST</button>
+                                <button type="submit" class="btn-brand w-100">Send Request</button>
                             </form>
                         {% endif %}
                     {% else %}
-                        <a href="{% url 'users:login' %}" class="btn btn-block" style="background: #7377E4; color: white;">LOGIN TO JOIN</a>
+
+                        <button type="button" class="btn-brand w-100 py-2" data-toggle="modal" data-target="#loginModal">
+                            Log in to Join
+                        </button>
+
                     {% endif %}
                 </div>
             </div>

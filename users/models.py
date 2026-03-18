@@ -6,10 +6,14 @@ from django.dispatch import receiver
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    # for users who dont have a dob
     date_of_birth = models.DateField(null=True, blank=True)
-
+    GENDER_CHOICES = [
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('O', 'Other'),
+        ('P', 'Prefer not to say'),
+    ]
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
     def __str__(self):
         return f'{self.user.username} Profile'
 
