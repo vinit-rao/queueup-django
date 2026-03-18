@@ -9,9 +9,7 @@
         <div class="mb-3 mb-md-0">
             <h1 class="mb-1 font-weight-bold text-white">Welcome to QueueUp</h1>
             <p class="text-muted mb-0">Discover active communities and jump right in.</p>
-        </div>
-        <a href="{% url 'posts:list' %}" class="btn-brand-outline py-2 px-4">View All Lobbies</a>
-    </div>
+        </div></div>
 
     <section class="mb-5">
         <h2 class="mb-4 font-weight-bold text-white" style="font-size: 1.5rem;">Featured Lobbies</h2>
@@ -64,32 +62,6 @@
                     <p class="text-muted">No lobbies created yet. Be the first!</p>
                 </div>
             {% endfor %}
-        </div>
-    </section>
-
-    <section class="row mt-5">
-        <div class="col-md-4 mb-3">
-            <div class="card-dark p-4 h-100 d-flex flex-column">
-                <h3 class="mb-3 font-weight-bold text-white">Latest Post</h3>
-                <p class="text-muted mb-4">Explore games and discover new ones to play.</p>
-                <a href="{% url 'posts:list' %}" class="btn-brand text-center mt-auto">Explore Posts</a>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-3">
-            <div class="card-dark p-4 h-100 d-flex flex-column">
-                <h3 class="mb-3 font-weight-bold text-white">Trending Games</h3>
-                <p class="text-muted mb-4">See what games people are playing right now.</p>
-                <a href="{% url 'posts:list' %}" class="btn-brand-outline text-center mt-auto">View Trends</a>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-3">
-            <div class="card-dark p-4 h-100 d-flex flex-column">
-                <h3 class="mb-3 font-weight-bold text-white">Create Your Own</h3>
-                <p class="text-muted mb-4">Create your own room for others to join and play.</p>
-                <a href="{% url 'posts:new-post' %}" class="btn-brand-outline text-center mt-auto">Create Post</a>
-            </div>
         </div>
     </section>
 </div>
