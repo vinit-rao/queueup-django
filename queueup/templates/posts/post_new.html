@@ -14,20 +14,24 @@
 
                     <div class="form-group mb-4">
                         <label class="form-label-muted text-muted">Title:</label>
-                        {{ form.title }}
+                        <input type="text" name="title" id="id_title" class="form-control form-dark-input" placeholder="e.g. Need 2 more for Ranked" required>
                     </div>
 
                     <div class="form-group mb-4">
                         <label class="form-label-muted text-muted">Body:</label>
-                        {{ form.body }}
+                        <textarea name="body" id="id_body" class="form-control form-dark-input" rows="5" placeholder="e.g. Looking for chill people to play a few matches tonight. Must have a mic!" required></textarea>
                     </div>
 
                     <div class="form-group mb-4 position-relative">
                         <label class="form-label-muted text-muted">Game name:</label>
-
                         <input type="text" id="id_game_name" name="game_name" class="form-control form-dark-input" autocomplete="off" placeholder="Search for a game..." required>
-
                         <ul id="autocomplete-results" class="suggestions-dropdown d-none" style="list-style: none; padding: 0; margin: 0;"></ul>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="form-label-muted text-muted">Tags (Optional):</label>
+                        <input type="text" id="id_tags" name="tags" class="form-control form-dark-input" placeholder="e.g. casual, competitive, fps" autocomplete="off">
+                        <small class="form-text text-muted mt-1">Max 5 tags, separated by commas. Max 12 characters per tag.</small>
                     </div>
 
                     {% for hidden in form.hidden_fields %}
@@ -62,8 +66,6 @@
                     if (data.results.length > 0) {
                         data.results.forEach(game => {
                             const li = document.createElement('li');
-
-                            // Apply the custom CSS class we made earlier
                             li.className = 'suggestion-item d-flex align-items-center text-white';
 
                             // Icon
@@ -117,6 +119,28 @@
                 resultList.classList.add('d-none');
             }
         });
+
+        // --- TAG VALIDATION (Max 5 tags, Max 12 chars per tag) ---
+        const tagsInput = document.getElementById('id_tags');
+        if (tagsInput) {
+            tagsInput.addEventListener('input', function() {
+                // 1. Split by commas and limit to 5 total tags
+                let parts = this.value.split(',');
+                if (parts.length > 5) {
+                    parts = parts.slice(0, 5);
+                    this.value = parts.join(',');
+                }
+
+                // 2. Limit each individual tag to 12 characters
+                let validParts = this.value.split(',').map(tag => {
+                    return tag.length > 12 ? tag.slice(0, 12) : tag;
+                });
+
+                if (this.value !== validParts.join(',')) {
+                    this.value = validParts.join(',');
+                }
+            });
+        }
     });
 </script>
 {% endblock %}
