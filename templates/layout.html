@@ -84,6 +84,7 @@
 
     <footer class="mt-auto py-4" style="background-color: var(--background); border-top: 1px solid var(--stroke);">
         <div class="container text-center">
+            <img src="{% static 'favicon.ico' %}" alt="QueueUp Logo" width="30" height="30" class="mx-auto mb-2" style="border-radius: 6px; display: block; object-fit: cover;">
             <p class="text-muted mb-0 small">&copy; {% now "Y" %} QueueUp. Made by the Biggest of Teams</p>
         </div>
     </footer>
@@ -96,21 +97,23 @@
             <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
           </div>
           <div class="modal-body">
-            <div id="loginErrors" class="alert alert-danger" style="display: none;"></div>
-            <form id="loginForm" method="POST" action="{% url 'users:login' %}">
+
+            <form id="loginForm" method="POST" action="{% url 'users:login' %}" novalidate>
               {% csrf_token %}
               <div class="form-group mb-3">
                 <label class="form-label-muted">Username</label>
                 <input type="text" name="username" class="form-control form-dark-input" required>
               </div>
-              <div class="form-group mb-4">
+              <div class="form-group mb-2">
                 <label class="form-label-muted">Password</label>
                 <input type="password" name="password" class="form-control form-dark-input" required>
               </div>
+              <div id="login-error-general" class="text-danger small mb-3 error-msg" style="display: none;"></div>
+
               <button type="submit" class="btn-brand w-100 py-2">Log In</button>
             </form>
             <div class="text-center mt-4">
-                <a href="#" class="text-muted small" data-dismiss="modal" data-toggle="modal" data-target="#registerModal">Need an account? Sign Up</a>
+                <a href="#" class="text-muted small" data-dismiss="modal" data-toggle="modal" data-target="#registerModal">New to QueueUp? Sign Up</a>
             </div>
           </div>
         </div>
@@ -126,14 +129,13 @@
           </div>
           <div class="modal-body">
 
-            <div id="registerErrors" class="alert alert-danger" style="display: none;"></div>
-
-            <form id="registerForm" method="POST" action="{% url 'users:register' %}">
+            <form id="registerForm" method="POST" action="{% url 'users:register' %}" novalidate>
               {% csrf_token %}
 
               <div class="form-group mb-3">
                 <label class="form-label-muted">Username</label>
-                <input type="text" name="username" class="form-control form-dark-input" required>
+                <input type="text" name="username" class="form-control form-dark-input" placeholder="What you'll be known as" required>
+                <div id="reg-error-username" class="text-danger small mt-1 error-msg" style="display: none;"></div>
               </div>
 
               <div class="form-group mb-3">
@@ -161,11 +163,12 @@
                     <option value="" disabled selected>Year</option>
                   </select>
                 </div>
+                <div id="reg-error-date_of_birth" class="text-danger small mt-1 error-msg" style="display: none;"></div>
               </div>
 
               <div class="form-group mb-3">
                 <label class="form-label-muted">Gender</label>
-                <input type="hidden" id="genderInput" name="gender" required>
+                <input type="hidden" id="genderInput" name="gender">
                 <div class="d-flex" style="border: 1px solid var(--stroke); border-radius: 6px; overflow: hidden;">
                   <button type="button" class="btn gender-btn flex-fill" data-value="M" style="background: var(--main-secondary); color: var(--fortiary); border: none; border-right: 1px solid var(--stroke); border-radius: 0; padding: 10px; transition: 0.2s;">
                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M9.5 2a.5.5 0 0 1 0-1h5a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0V2.707L9.871 6.836a5 5 0 1 1-.707-.707L13.293 2H9.5zM6 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/></svg>
@@ -174,16 +177,21 @@
                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM3 5a5 5 0 1 1 5.5 4.975V12h2a.5.5 0 0 1 0 1h-2v2.5a.5.5 0 0 1-1 0V13h-2a.5.5 0 0 1 0-1h2v-2.025A5 5 0 0 1 3 5z"/></svg>
                   </button>
                 </div>
+                <div id="reg-error-gender" class="text-danger small mt-1 error-msg" style="display: none;"></div>
               </div>
 
               <div class="form-group mb-3">
                   <label class="form-label-muted">Password</label>
-                  <input type="password" name="password1" class="form-control form-dark-input" required>
+                  <input type="password" name="password1" class="form-control form-dark-input" placeholder="Must be 8-200 characters" required>
+                  <div id="reg-error-password1" class="text-danger small mt-1 error-msg" style="display: none;"></div>
               </div>
-                <div class="form-group mb-4">
+              <div class="form-group mb-3">
                   <label class="form-label-muted">Confirm Password</label>
                   <input type="password" name="password2" class="form-control form-dark-input" required>
-               </div>
+                  <div id="reg-error-password2" class="text-danger small mt-1 error-msg" style="display: none;"></div>
+              </div>
+
+              <div id="reg-error-general" class="text-danger small mb-3 error-msg" style="display: none;"></div>
 
               <button type="submit" class="btn-brand w-100 py-2">Sign Up</button>
             </form>
@@ -239,58 +247,68 @@
             });
         });
 
-        // --- 3. AJAX Auth Form Handling ---
-        async function handleAuthSubmit(event, formId, errorDivId, defaultErrorMessage) {
+        // --- 3. AJAX Auth Form Handling (UPDATED FOR INLINE ERRORS) ---
+        async function handleAuthSubmit(event, formId, defaultErrorMessage) {
             event.preventDefault();
 
             const form = document.getElementById(formId);
-            const errorDiv = document.getElementById(errorDivId);
             const submitBtn = form.querySelector('button[type="submit"]');
+
+            // 1. Clear all existing error messages in this form
+            form.querySelectorAll('.error-msg').forEach(el => {
+                el.style.display = 'none';
+                el.innerHTML = '';
+            });
 
             const originalText = submitBtn.innerText;
             submitBtn.innerText = 'Processing...';
             submitBtn.disabled = true;
-            errorDiv.style.display = 'none';
 
             try {
                 const formData = new FormData(form);
 
+                // --- Frontend Validation for Register Form ---
                 if (formId === 'registerForm') {
                     const month = formData.get('dob_month');
                     const day = formData.get('dob_day');
                     const year = formData.get('dob_year');
                     const gender = formData.get('gender');
 
-                    // 1. Force Gender Selection
+                    let hasFrontendError = false;
+
+                    // A. Force Gender Selection
                     if (!gender) {
-                        errorDiv.innerHTML = "• Please select a gender.";
-                        errorDiv.style.display = 'block';
-                        submitBtn.innerText = originalText;
-                        submitBtn.disabled = false;
-                        return; // Stop submission
+                        const genderErr = document.getElementById('reg-error-gender');
+                        genderErr.innerHTML = "Gender is required.";
+                        genderErr.style.display = 'block';
+                        hasFrontendError = true;
                     }
 
-                    // 2. Validate Age (Must be 13+)
+                    // B. Validate Age (Must be 13+)
                     if (month && day && year) {
-                        const dobDate = new Date(year, month - 1, day); // month is 0-indexed in JS dates
+                        const dobDate = new Date(year, month - 1, day);
                         const thirteenYearsAgo = new Date();
                         thirteenYearsAgo.setFullYear(thirteenYearsAgo.getFullYear() - 13);
 
-                        // If the chosen birth date is more recent than 13 years ago, they are under 13
                         if (dobDate > thirteenYearsAgo) {
-                            errorDiv.innerHTML = "• You must be at least 13 years old to register.";
-                            errorDiv.style.display = 'block';
-                            submitBtn.innerText = originalText;
-                            submitBtn.disabled = false;
-                            return; // Stop submission
+                            const dobErr = document.getElementById('reg-error-date_of_birth');
+                            dobErr.innerHTML = "You must be at least 13 years old to register.";
+                            dobErr.style.display = 'block';
+                            hasFrontendError = true;
+                        } else {
+                            formData.append('date_of_birth', `${year}-${month}-${day}`);
                         }
+                    }
 
-                        // Attach the formatted date string for Django
-                        formData.append('date_of_birth', `${year}-${month}-${day}`);
+                    // Stop if we caught frontend errors
+                    if (hasFrontendError) {
+                        submitBtn.innerText = originalText;
+                        submitBtn.disabled = false;
+                        return;
                     }
                 }
 
-                // Send the request, telling Django we expect a JSON response
+                // --- Submit to Backend ---
                 const response = await fetch(form.action, {
                     method: 'POST',
                     body: formData,
@@ -301,43 +319,65 @@
                 });
 
                 if (response.ok) {
-                    // Success! Refresh the page to show logged-in state
+                    // Success! Refresh the page
                     window.location.reload();
                 } else {
-                    // Failure! Read the specific JSON errors sent by Django
+                    // Failure! Map errors to their specific fields
                     const data = await response.json();
-                    let errorHtml = '';
 
                     if (data.errors) {
-                        // Loop through Django's form errors and stack them nicely
                         for (const [field, msgs] of Object.entries(data.errors)) {
-                            errorHtml += `<div>• ${msgs.join(' ')}</div>`;
+                            let errorTarget;
+
+                            // If it's the login form, everything funnels to the general error div
+                            if (formId === 'loginForm') {
+                                errorTarget = document.getElementById('login-error-general');
+                            }
+                            // If it's register, try to match the Django field name (e.g. username, password1)
+                            else {
+                                errorTarget = document.getElementById(`reg-error-${field}`);
+                                // If Django sends a global error (like "__all__" for mismatched passwords), fallback to general
+                                if (!errorTarget) {
+                                    errorTarget = document.getElementById('reg-error-general');
+                                }
+                            }
+
+                            if (errorTarget) {
+                                // Add line breaks if there are multiple errors for a single field
+                                errorTarget.innerHTML += (errorTarget.innerHTML ? '<br>' : '') + msgs.join('<br>');
+                                errorTarget.style.display = 'block';
+                            }
                         }
                     } else {
-                        errorHtml = defaultErrorMessage;
+                        // Fallback if data.errors is missing
+                        let fallbackTarget = formId === 'loginForm' ? document.getElementById('login-error-general') : document.getElementById('reg-error-general');
+                        fallbackTarget.innerHTML = defaultErrorMessage;
+                        fallbackTarget.style.display = 'block';
                     }
 
-                    errorDiv.innerHTML = errorHtml;
-                    errorDiv.style.display = 'block';
                     submitBtn.innerText = originalText;
                     submitBtn.disabled = false;
                 }
             } catch (error) {
-                errorDiv.innerText = "A network error occurred. Please try again.";
-                errorDiv.style.display = 'block';
+                // Catch severe network failures
+                let fatalTarget = formId === 'loginForm' ? document.getElementById('login-error-general') : document.getElementById('reg-error-general');
+                fatalTarget.innerHTML = "A network error occurred. Please try again.";
+                fatalTarget.style.display = 'block';
+
                 submitBtn.innerText = originalText;
                 submitBtn.disabled = false;
             }
         }
 
+        // Attach listeners
         const loginForm = document.getElementById('loginForm');
         if (loginForm) {
-            loginForm.addEventListener('submit', (e) => handleAuthSubmit(e, 'loginForm', 'loginErrors', 'Invalid username or password.'));
+            loginForm.addEventListener('submit', (e) => handleAuthSubmit(e, 'loginForm', 'Invalid username or password.'));
         }
 
         const registerForm = document.getElementById('registerForm');
         if (registerForm) {
-            registerForm.addEventListener('submit', (e) => handleAuthSubmit(e, 'registerForm', 'registerErrors', 'Registration failed. Check your inputs.'));
+            registerForm.addEventListener('submit', (e) => handleAuthSubmit(e, 'registerForm', 'Registration failed. Check your inputs.'));
         }
     });
     </script>
