@@ -6,7 +6,7 @@
 
 body {
     min-height: 100vh;
-    background-color: black;
+    background-color: #000000;
     color: whitesmoke;
     font-size: 3rem;
     display: flex;

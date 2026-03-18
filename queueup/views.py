@@ -9,30 +9,37 @@ from .forms import CreatePost
 from .models import Post, JoinRequest
 from django.contrib.auth.decorators import login_required
 from . import forms
-from django.db.models import Q
 
-#Diako Search Feature
-from django.db.models import Q
 
 def home(request):
-    return render(request, 'home.html')
+    random_posts = Post.objects.all().order_by('?')[:4]
+    return render(request, 'home.html', {'posts': random_posts})
+
 
 def tutorial(request):
     return render(request, 'tutorial.html')
 
+
 def about(request):
     return render(request, 'about.html')
 
+
 def posts_list(request):
     query = request.GET.get('q')
-
-    posts = Post.objects.all()
+    posts = Post.objects.all().order_by('-date')
 
     if query:
-        posts = posts.filter(
-            Q(title__icontains=query) |
-            Q(author__username__icontains=query)
-        )
+        terms = query.split()
+        q_objects = Q()
+
+        for term in terms:
+            if term.startswith('#') and len(term) > 1:
+                tag_word = term[1:]
+                q_objects |= Q(tags__icontains=tag_word)
+            else:
+                q_objects |= Q(title__icontains=term) | Q(author__username__icontains=term)
+
+        posts = posts.filter(q_objects).distinct()
 
     return render(request, 'posts/posts_list.html', {
         'posts': posts,
@@ -69,6 +76,7 @@ def post_page(request, slug):
         'application_status': application_status
     })
 
+
 @login_required(login_url='/users/login/')
 def post_new(request):
     if request.method == 'POST':
@@ -95,12 +103,20 @@ def post_new(request):
     return render(request, 'posts/post_new.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/users/login/')
 def my_posts_view(request):
     user_posts = Post.objects.filter(author=request.user).annotate(
         pending_count=Count('join_requests', filter=Q(join_requests__status='Pending'))
     ).order_by('-date')
-    return render(request, 'posts/my_posts.html', {'posts': user_posts})
+    joined_posts = Post.objects.filter(
+        join_requests__applicant=request.user,
+        join_requests__status='Accepted'
+    ).order_by('-date')
+    return render(request, 'posts/my_posts.html', {
+        'posts': user_posts,
+        'joined_posts': joined_posts
+    })
+
 
 @login_required(login_url='/users/login/')
 def manage_lobby(request, slug):
@@ -113,6 +129,7 @@ def manage_lobby(request, slug):
         'post': post,
         'applications': applications
     })
+
 
 @login_required(login_url='/users/login/')
 def update_request(request, request_id, action):
@@ -127,6 +144,7 @@ def update_request(request, request_id, action):
     join_request.save()
     return JsonResponse({'success': True, 'action': action, 'request_id': request_id})
 
+
 @login_required(login_url='/users/login/')
 def lobby_view(request, lobby_name):
     post = get_object_or_404(Post, slug=lobby_name)
@@ -136,6 +154,7 @@ def lobby_view(request, lobby_name):
         'lobby_name': lobby_name,
         'messages': messages
     })
+
 
 def api_search_games(request):
     query = request.GET.get('q', '')

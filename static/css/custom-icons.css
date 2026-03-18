@@ -1,0 +1,64 @@
+/* CUSTOM ICONS */
+.custom-icon-roblox *{
+    transform: translate(0rem, 0rem);
+    
+    display: inline-block;
+    width: 1.2em; /* Scales with font size */
+    height: 1.2em; /* Scales with font size */
+    color: inherit;
+    vertical-align: middle;
+}
+
+.custom-icon-discord *{
+    transform: translate(0rem, 0rem);
+    display: inline-block;
+    width: 1.4em; /* Scales with font size */
+    height: 1.4em; /* Scales with font size */
+    color: inherit;
+    vertical-align: middle;
+}
+
+.custom-icon-linkedin *{
+    transform: translate(0rem, 0rem);
+    display: inline-block;
+    width: 1.3em; /* Scales with font size */
+    height: 1.3em; /* Scales with font size */
+    color: inherit;
+    vertical-align: middle;
+}
+
+.custom-icon-twitter *{
+    transform: translate(0rem, 0rem);
+    display: inline-block;
+    width: 1.4em; /* Scales with font size */
+    height: 1.4em; /* Scales with font size */
+    color: inherit;
+    vertical-align: middle;
+}
+
+.custom-icon-bars *{
+    transform: translate(0rem, 0rem);
+    display: inline-block;
+    width: 1.3em; /* Scales with font size */
+    height: 1.3em; /* Scales with font size */
+    color: inherit;
+    vertical-align: middle;
+}
+
+.custom-icon-close *{
+    transform: translate(0rem, 0rem);
+    display: inline-block;
+    width: 1.3em; /* Scales with font size */
+    height: 1.3em; /* Scales with font size */
+    color: inherit;
+    vertical-align: middle;
+}
+
+.custom-icon-right *, .custom-icon-left *{
+    transform: translate(0rem, 0rem);
+    display: inline-block;
+    width: 1.3em; /* Scales with font size */
+    height: 1.3em; /* Scales with font size */
+    color: inherit;
+    vertical-align: middle;
+}

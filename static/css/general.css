@@ -1,0 +1,180 @@
+@import "typography.css";
+@import "custom-icons.css";
+@import "reset.css";
+
+:root {
+    /* Text Colours */
+    --primary: #7E77E4;
+    --secondary: #e0e0e0;
+    --tertiary: #cccccc;
+    --fortiary: #999999;
+
+    /* Monochromatic Colour Palette */
+    --background: #0a0a0a;
+    --background-secondary: #121212;
+    --main: #121212;
+    --main-secondary: #1a1a1a;
+    --main-tertiary: #222222;
+    --main-fortiary: #2a2a2a;
+    --main-fiftiary: #333333;
+
+    --boxes: #141414;
+    --highlight: #ffffff;
+
+    --black: rgb(0, 0, 0);
+    --shadows: rgba(0, 0, 0, .5);
+
+    /* Stroke */
+    --stroke: #333333;
+    --stroke-overlay: #222222;
+    --stroke-width: 0.1rem;
+    --stroke-width-small: 0.05rem;
+
+    /* Fonts */
+    --title-font: 'Radio Canada Big', sans-serif;
+    --body-font: 'Radio Canada Big', sans-serif;
+}
+
+/* TYPOGRAPHY & BASE */
+html {
+    font-size: 100%;
+    color: var(--primary);
+    background-color: var(--background);
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--primary);
+    font-family: var(--body-font);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+h1, h2, h3, h4, h5, h6 { font-family: var(--title-font); color: var(--primary); }
+a { color: var(--secondary); text-decoration: none; transition: 0.2s ease; }
+a:hover { color: var(--highlight); text-decoration: none; }
+
+/* =========================================
+   NEW CUSTOM UI COMPONENTS
+========================================= */
+
+/* Navbar */
+.navbar-dark-custom { background-color: var(--background); border-bottom: 1px solid var(--main-secondary); }
+.navbar-brand-logo { color: var(--primary); font-weight: 800; letter-spacing: -0.5px; font-size: 1.4rem; display: flex; align-items: center; }
+.navbar-icon-wrapper { background: var(--main-fiftiary); border-radius: 6px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; margin-right: 10px; }
+.profile-avatar { width: 32px; height: 32px; border-radius: 50%; background-color: var(--main-fiftiary); display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--stroke); }
+
+/* Buttons */
+.btn-brand { background-color: var(--secondary); color: var(--black); font-weight: bold; border-radius: 6px; border: none; padding: 8px 16px; transition: 0.2s; }
+.btn-brand:hover { background-color: var(--primary); color: var(--black); }
+.btn-brand-outline { background-color: transparent; color: var(--tertiary); border: 1px solid var(--stroke); font-weight: bold; border-radius: 6px; padding: 8px 16px; transition: 0.2s; }
+.btn-brand-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+/* Forms & Modals */
+.modal-dark-content { background-color: var(--main); border: 1px solid var(--stroke); color: var(--primary); border-radius: 12px; }
+.form-dark-input { background-color: var(--main-secondary) !important; border: 1px solid var(--stroke) !important; color: var(--primary) !important; border-radius: 6px; }
+.form-dark-input:focus { border-color: var(--fortiary) !important; box-shadow: none !important; }
+.form-label-muted { color: var(--fortiary); font-size: 0.8rem; margin-bottom: 4px; }
+
+/* Django Default Form Element Styling */
+input[type="text"], input[type="password"], input[type="email"],
+input[type="number"], input[type="url"], input[type="file"], input[type="date"],
+textarea, select {
+    background-color: var(--main-secondary) !important;
+    border: 1px solid var(--stroke) !important;
+    color: var(--primary) !important;
+    border-radius: 6px;
+    padding: 10px 12px;
+    width: 100%;
+    max-width: 100%;
+}
+input[type="file"] { padding: 6px; }
+input:focus, textarea:focus, select:focus {
+    border-color: var(--fortiary) !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+/* Django Label & Help Text spacing */
+label {
+    color: var(--fortiary);
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+    display: block;
+}
+.helptext {
+    font-size: 0.75rem;
+    color: #666;
+    display: block;
+    margin-top: -10px;
+    margin-bottom: 15px;
+}
+
+/* Cards (Explore/Home) */
+.card-dark { background-color: var(--main); border: 1px solid var(--stroke); border-radius: 12px; transition: transform 0.2s; height: 100%; overflow: hidden; display: flex; flex-direction: column; }
+.card-dark:hover { transform: translateY(-3px); }
+.card-cover-container { width: 100%; height: 160px; background-color: var(--main-tertiary); position: relative; }
+.card-cover-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8); }
+.card-tag { background: var(--main-secondary); border: 1px solid var(--stroke); color: var(--tertiary); border-radius: 4px; padding: 2px 6px; font-size: 0.7rem; }
+.card-avatar-small { width: 24px; height: 24px; border-radius: 50%; background-color: var(--main-fiftiary); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+
+/* Post Page & Banners */
+.banner-container { width: 100%; height: 400px; position: relative; overflow: hidden; background-color: var(--main-tertiary); border-bottom: 1px solid var(--stroke); }
+.banner-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.6); }
+.banner-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px; background: linear-gradient(transparent, var(--background)); }
+
+/* Lobby & Chat */
+.lobby-background { min-height: 90vh; background-size: cover; background-position: center; }
+.chat-box { height: 500px; overflow-y: auto; background-color: var(--main-secondary); padding: 20px; border-radius: 8px; border: 1px solid var(--stroke); }
+.chat-message-time { font-size: 0.75rem; color: var(--fortiary); margin-right: 8px; }
+.chat-message-user { font-size: 1rem; font-weight: bold; color: var(--primary); margin-right: 4px; }
+
+/* Badges & Icons */
+.badge-notification { position: absolute; top: -10px; right: -10px; background-color: var(--primary); color: var(--black); width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 0.9rem; z-index: 10; box-shadow: 0 4px 8px var(--shadows); }
+
+/* Create Post Autocomplete */
+.autocomplete-results { position: absolute; background: var(--main-secondary); border: 1px solid var(--stroke); list-style: none; padding: 0; width: 100%; z-index: 1000; border-radius: 6px; overflow: hidden; margin-top: 4px; }
+.autocomplete-results li { padding: 10px; cursor: pointer; border-bottom: 1px solid var(--stroke); color: var(--tertiary); display: flex; align-items: center; }
+.autocomplete-results li:hover { background: var(--main-fiftiary); color: var(--primary); }
+.autocomplete-icon { width: 30px; height: 30px; border-radius: 4px; object-fit: cover; margin-right: 10px; }
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1400px !important;
+    }
+}
+
+.suggestions-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1050;
+
+    background-color: var(--main);
+    border: 1px solid var(--stroke);
+    border-radius: 6px;
+    margin-top: 4px;
+
+    max-height: 220px;
+    overflow-y: auto;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.suggestions-dropdown .suggestion-item {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--stroke);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.suggestions-dropdown .suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestions-dropdown .suggestion-item:hover {
+    background-color: var(--main-secondary);
+}
