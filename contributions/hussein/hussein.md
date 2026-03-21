@@ -9,6 +9,8 @@
 
 See full document: [Sprint_Review_Part1.md](Sprint_Review_Part1.md)
 
+![Sprint Review GitHub](sprint_review_github.png)
+
 ---
 
 ### Sprint Review 1 – Meeting Agenda Part 2
