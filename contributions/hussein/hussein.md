@@ -20,6 +20,14 @@ See full document: [Sprint_Review_Part2.md](Sprint_Review_Part2.md)
 
 ---
 
+## Contribution Summary
+
+My main contribution to the project was user-interface and functionality testing throughout both the earlier and current stages of development. I tested the website from the user’s perspective to make sure important features were working properly as the project continued to improve. This included checking the login page, registration page, navigation, lobby browsing, and posts page. Through this testing, I looked for usability issues, broken features, layout inconsistencies, and other bugs that could affect the user experience. I also identified technical problems, including an error on the posts page, and helped highlight areas that needed fixes or improvement. 
+
+As evidence, I included screenshots from both earlier and more recent versions of the website showing the pages and features I tested. These screenshots document my quality-assurance role and show my contribution to improving the website’s usability, stability, and overall functionality.
+
+---
+
 ## Feature Screenshots
 
 ### Active Lobbies Page
