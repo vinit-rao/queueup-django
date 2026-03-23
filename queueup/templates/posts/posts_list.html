@@ -25,7 +25,7 @@
     <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4">
         {% for post in posts %}
             <div class="col mb-4">
-                <a href="{% url 'posts:page' slug=post.slug %}" class="text-decoration-none" style="color: inherit; display: block; transition: transform 0.2s;">
+                <a href="{% url 'posts:page' slug=post.slug %}" class="text-decoration-none" style="color: inherit; display: block; transition: all 0.2s ease; padding: 10px; border-radius: 16px;" onmouseover="this.style.backgroundColor='#222222'; this.style.transform='translateY(-3px)';" onmouseout="this.style.backgroundColor='transparent'; this.style.transform='translateY(0)';">
 
                     <div style="width: 100%; border-radius: 12px; height: 160px; background-color: #d1d5db; overflow: hidden; position: relative;">
                         {% if post.cover_url %}
@@ -44,27 +44,27 @@
                             </div>
                         </div>
 
-                <div>
-                <h6 style="color: #fff; margin: 0; font-weight: bold; font-size: 0.95rem; line-height: 1.2;">{{ post.title|truncatechars:35 }}</h6>
-                <p class="text-muted mb-1" style="font-size: 0.75rem;">Hosted by {{ post.author.username }} • {{ post.date|timesince }} ago</p>
+                        <div style="flex: 1; min-width: 0;">
+                            <h6 style="color: #fff; margin: 0; font-weight: bold; font-size: 0.95rem; line-height: 1.2;">{{ post.title|truncatechars:35 }}</h6>
+                            <p class="text-muted mb-1" style="font-size: 0.75rem;">Hosted by {{ post.author.username }} • {{ post.date|timesince }} ago</p>
 
-                <div class="d-flex flex-wrap" style="gap: 5px; height: 28px; overflow: hidden;">
+                            <div class="d-flex flex-wrap" style="gap: 5px; height: 28px; overflow: hidden;">
 
-                    {% if post.game_name %}
-                        <span style="background: #1a1a1a; border: 1px solid #7e77e4; color: #ccc; border-radius: 4px; padding: 2px 6px; font-size: 0.7rem; font-weight: bold;">{{ post.game_name }}</span>
-                    {% endif %}
+                                {% if post.game_name %}
+                                    <span title="{{ post.game_name }}" style="background: #1a1a1a; border: 1px solid #7e77e4; color: #ccc; border-radius: 4px; padding: 2px 6px; font-size: 0.7rem; font-weight: bold; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block;">{{ post.game_name }}</span>
+                                {% endif %}
 
-                    {% if post.tags %}
-                        {% for tag in post.get_tags_list %}
-                            <span style="background: #1a1a1a; border: 1px solid #ffffff; color: #ccc; border-radius: 4px; padding: 2px 6px; font-size: 0.7rem; font-weight: normal;">{{ tag }}</span>
-                        {% endfor %}
-                    {% endif %}
+                                {% if post.tags %}
+                                    {% for tag in post.get_tags_list %}
+                                        <span title="{{ tag }}" style="background: #1a1a1a; border: 1px solid #ffffff; color: #ccc; border-radius: 4px; padding: 2px 6px; font-size: 0.7rem; font-weight: normal; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block;">{{ tag }}</span>
+                                    {% endfor %}
+                                {% endif %}
 
-                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
             </div>
-        </div>
-    </a>
-</div>
         {% empty %}
             <div class="col-12 mt-5">
                 <p class="text-muted">No active lobbies found matching your search.</p>
