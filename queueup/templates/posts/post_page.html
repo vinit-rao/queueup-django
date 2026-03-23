@@ -19,15 +19,29 @@
         </div>
     </div>
 
-    <div class="container-fluid mt-5">
+    <div class="container-fluid mt-5 mb-5">
         <div class="row">
             <div class="col-md-8">
-                <div class="text-light" style="line-height: 1.8; font-size: 1.1rem;">
-                    {{ post.body|linebreaks }}
+
+                <div>
+                    <h3 class="text-white font-weight-bold mb-3 h4">About the Lobby</h3>
+                    <div class="text-light" style="line-height: 1.8; font-size: 1.1rem;">
+                        {{ post.body|linebreaks }}
+                    </div>
                 </div>
+
+                {% if post.game_description %}
+                <div class="mt-5 pt-4" style="border-top: 1px solid var(--stroke);">
+                    <h3 class="text-white font-weight-bold mb-3 h4">About {{ post.game_name }}</h3>
+                    <div class="text-muted" style="line-height: 1.6; font-size: 1rem;">
+                        {{ post.game_description|linebreaks }}
+                    </div>
+                </div>
+                {% endif %}
+
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4 mt-5 mt-md-0 align-self-start">
                 <div class="card-dark p-4">
                     <p class="text-muted mb-4 small">Hosted by <strong class="text-white">{{ post.author.username }}</strong></p>
 
@@ -57,8 +71,8 @@
                         {% endif %}
                     {% else %}
 
-                        <button type="button" class="btn-brand w-100 py-2" data-toggle="modal" data-target="#loginModal">
-                            Log in to Join
+                        <button type="button" class="btn-brand w-100 py-2" data-toggle="modal" data-target="#registerModal">
+                            Sign Up to Join
                         </button>
 
                     {% endif %}
