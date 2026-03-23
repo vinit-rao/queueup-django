@@ -167,16 +167,25 @@
               </div>
 
               <div class="form-group mb-3">
-                <label class="form-label-muted">Gender</label>
-                <input type="hidden" id="genderInput" name="gender">
-                <div class="d-flex" style="border: 1px solid var(--stroke); border-radius: 6px; overflow: hidden;">
-                  <button type="button" class="btn gender-btn flex-fill" data-value="M" style="background: var(--main-secondary); color: var(--fortiary); border: none; border-right: 1px solid var(--stroke); border-radius: 0; padding: 10px; transition: 0.2s;">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M9.5 2a.5.5 0 0 1 0-1h5a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0V2.707L9.871 6.836a5 5 0 1 1-.707-.707L13.293 2H9.5zM6 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/></svg>
-                  </button>
-                  <button type="button" class="btn gender-btn flex-fill" data-value="F" style="background: var(--main-secondary); color: var(--fortiary); border: none; border-radius: 0; padding: 10px; transition: 0.2s;">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM3 5a5 5 0 1 1 5.5 4.975V12h2a.5.5 0 0 1 0 1h-2v2.5a.5.5 0 0 1-1 0V13h-2a.5.5 0 0 1 0-1h2v-2.025A5 5 0 0 1 3 5z"/></svg>
-                  </button>
-                </div>
+                  <label class="form-label-muted">Gender</label>
+                  <input type="hidden" id="genderInput" name="gender" required>
+                  <div class="d-flex" style="border: 1px solid var(--stroke); border-radius: 6px; overflow: hidden;">
+
+                    <button type="button" class="btn gender-btn flex-fill" data-value="M" style="background: var(--main-secondary); border: none; border-right: 1px solid var(--stroke); border-radius: 0; padding: 10px; transition: 0.2s;">
+                      <img src="{% static 'maleicon-unchecked.png' %}"
+                           data-unchecked="{% static 'maleicon-unchecked.png' %}"
+                           data-checked="{% static 'maleicon.png' %}"
+                           class="gender-icon" width="22" height="22" alt="Male" style="object-fit: contain;">
+                    </button>
+
+                    <button type="button" class="btn gender-btn flex-fill" data-value="F" style="background: var(--main-secondary); border: none; border-radius: 0; padding: 10px; transition: 0.2s;">
+                      <img src="{% static 'femaleicon-unchecked.png' %}"
+                           data-unchecked="{% static 'femaleicon-unchecked.png' %}"
+                           data-checked="{% static 'femaleicon.png' %}"
+                           class="gender-icon" width="22" height="22" alt="Female" style="object-fit: contain;">
+                    </button>
+
+                  </div>
                 <div id="reg-error-gender" class="text-danger small mt-1 error-msg" style="display: none;"></div>
               </div>
 
@@ -231,7 +240,7 @@
             }
         }
 
-        // --- 2. Gender Button Visuals & Input ---
+        // --- 2. Gender Button Image Swapping & Input ---
         const genderBtns = document.querySelectorAll('.gender-btn');
         const genderInput = document.getElementById('genderInput');
 
@@ -239,10 +248,16 @@
             btn.addEventListener('click', function() {
                 genderBtns.forEach(b => {
                     b.style.backgroundColor = 'var(--main-secondary)';
-                    b.style.color = 'var(--fortiary)';
+                    const img = b.querySelector('.gender-icon');
+                    if (img) {
+                        img.src = img.getAttribute('data-unchecked');
+                    }
                 });
                 this.style.backgroundColor = 'var(--main-fiftiary)';
-                this.style.color = 'var(--primary)';
+                const activeImg = this.querySelector('.gender-icon');
+                if (activeImg) {
+                    activeImg.src = activeImg.getAttribute('data-checked');
+                }
                 genderInput.value = this.getAttribute('data-value');
             });
         });
