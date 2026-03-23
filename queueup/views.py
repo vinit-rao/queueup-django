@@ -95,6 +95,7 @@ def post_new(request):
                     post.game_name = game_data['name']
                     post.cover_url = game_data['cover_url']
                     post.banner_url = game_data['banner_url']
+                    post.game_description = game_data.get('summary', '')
 
             post.save()
             return redirect('posts:list')

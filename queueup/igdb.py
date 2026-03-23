@@ -21,7 +21,7 @@ def fetch_game_data(search_query):
         "Client-ID": client_id,
         "Authorization": f"Bearer {token}"
     }
-    query = f'search "{search_query}"; fields name, cover.image_id, artworks.image_id; limit 1;'
+    query = f'search "{search_query}"; fields name, cover.image_id, artworks.image_id, summary; limit 1;'
     response = requests.post(url, headers=headers, data=query)
     if response.status_code == 200 and len(response.json()) > 0:
         game_info = response.json()[0]
@@ -37,7 +37,8 @@ def fetch_game_data(search_query):
         return {
             'name': game_info.get('name', search_query),
             'cover_url': cover_url,
-            'banner_url': banner_url
+            'banner_url': banner_url,
+            'summary': game_info.get('summary', '')
         }
 
     return None
