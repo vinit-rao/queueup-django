@@ -5,20 +5,10 @@
 - (Note it will take a couple mins to boot up if inactive)
 
 ### Introducing QueueUP
-
 QueueUp is a web application that allows users to connect with other users.
 - Browse a catalog of posts or create your own
 - Apply to and join a lobby to connect
 - Chat and have fun gaming with users
-
-Member| Role
---- | ---
-Dante|Product Owner
-Vinit|Scrum Master
-Diako|Developer
-Rowan|Developer
-Aidan|Developer
-Hussein|Developer
 
 ## Product Goal
 - Enable users to quickly discover, create, and join game lobbies with built-in chat and filtering, providing a simple and safe platform for gamers to connect, coordinate sessions, and build long-term relationships.
@@ -65,7 +55,7 @@ Hussein|Developer
 
 
 
-
+IMD2900 Design Studio I Final Project
 
 ### Resources Used:
 - [Python Django Tutorials for Beginners](https://www.youtube.com/playlist?list=PL0Zuz27SZ-6NamGNr7dEqzNFEcZ_FAUVX)
